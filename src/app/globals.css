@@ -1,14 +1,70 @@
 @import "tailwindcss";
 
-input:-webkit-autofill {
-  background-color: transparent !important;
-  -webkit-box-shadow: 0 0 0px 1000px #1a1a1a inset !important;
-  -webkit-text-fill-color: white !important;
-  transition: background-color 5000s ease-in-out 0s;
+/* Кастомные анимации */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.05) inset !important;
-  -webkit-text-fill-color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  transition: background-color 9999s ease-in-out 0s;
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+/* Дополнительные стили для плавности */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Кастомные градиенты */
+.gradient-orange {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+}
+
+/* Эффект стекла */
+.glass-effect {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Анимация пульсации для акцентов */
+@keyframes pulse-orange {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(249, 115, 22, 0);
+  }
+}
+
+.pulse-orange {
+  animation: pulse-orange 2s infinite;
+}
+
+/* Базовые стили для темной темы */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Кастомные утилиты для v4 */
+@utility backdrop-blur-glass {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+@utility text-shadow-glow {
+  text-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
 }
