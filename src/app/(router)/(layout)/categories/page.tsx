@@ -8,5 +8,5 @@ interface RestaurantPageProps {
 }
 
 export default function RestaurantPage({ params }: RestaurantPageProps) {
-  return <RestaurantMenu restaurantId={params.id} />
+  return <RestaurantMenu  />
 }
