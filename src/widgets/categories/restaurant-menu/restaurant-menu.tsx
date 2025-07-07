@@ -8,11 +8,6 @@ import { MenuGrid } from "@/features/categories/menu-grid/menu-grid"
 import { CartSidebar } from "../cart-sidebar/cart-sidebar"
 
 
-
-interface RestaurantMenuProps {
-  restaurantId: string
-}
-
 export interface MenuItem {
   id: number
   name: string
@@ -105,7 +100,7 @@ const categories = [
   },
 ]
 
-export function RestaurantMenu({ restaurantId }: RestaurantMenuProps) {
+export function RestaurantMenu() {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [searchQuery, setSearchQuery] = useState("")
