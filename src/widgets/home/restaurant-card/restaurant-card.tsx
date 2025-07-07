@@ -1,6 +1,7 @@
 import Image, { type StaticImageData } from "next/image"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card"
+import { Badge } from "@/shared/ui/badge"
+import Link from "next/link"
 
 interface Restaurant {
   id: number
@@ -16,8 +17,8 @@ interface RestaurantCardProps {
 
 export function RestaurantCard({ restaurant }: RestaurantCardProps) {
   return (
+    <Link href={"/categories"}>
     <Card className="group relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 hover:border-orange-500/50 transition-all duration-500 cursor-pointer hover:shadow-2xl hover:shadow-orange-500/20 hover:-translate-y-2">
-      {/* Градиентный оверлей */}
       <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
       <div className="relative overflow-hidden">
@@ -57,5 +58,6 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
         <div className="mt-4 h-0.5 bg-gradient-to-r from-orange-500 to-transparent w-0 group-hover:w-full transition-all duration-500"></div>
       </CardContent>
     </Card>
+    </Link>
   )
 }

@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import { Providers } from "./(router)/provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -18,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={inter.className}>
-          <main className="flex-1 bg-gray-50">{children}</main>
+        <Providers>
+          {/* Убираем main отсюда, так как он будет в дочерних layout'ах */}
+          <div className="min-h-screen bg-black">{children}</div>
+        </Providers>
       </body>
     </html>
   )
