@@ -4,7 +4,7 @@ import type React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/shared/utils/cn"
-import { ShoppingCart, Settings, User, Receipt, Grid3X3, UtensilsCrossed } from "lucide-react"
+import { ShoppingCart, User, Receipt, Grid3X3, UtensilsCrossed, CalendarCheck } from "lucide-react"
 
 interface SidebarItem {
   id: string
@@ -35,17 +35,18 @@ const sidebarItems: SidebarItem[] = [
     href: "/orders",
   },
   {
+    id: "reservations",
+    label: "Бронь",
+    icon: CalendarCheck,
+    href: "/reservations",
+  },
+  {
     id: "profile",
     label: "Профиль",
     icon: User,
     href: "/profile",
-  },
-  {
-    id: "settings",
-    label: "Настройки",
-    icon: Settings,
-    href: "/settings",
-  },
+  }
+
 ]
 
 export function Sidebar() {
@@ -70,7 +71,7 @@ export function Sidebar() {
 
           return (
             <Link key={item.id} href={item.href}>
-              <div className="flex flex-col items-center group cursor-pointer">
+              <div className="flex flex-col justify-center items-center group cursor-pointer">
                 {/* Иконка в круге */}
                 <div
                   className={cn(
@@ -98,7 +99,7 @@ export function Sidebar() {
                 {/* Текст */}
                 <span
                   className={cn(
-                    "text-xs font-medium mt-2 transition-colors duration-200",
+                    "text-xs font-medium mt-2 text-center transition-colors duration-200",
                     isActive ? "text-white" : "text-gray-400 group-hover:text-gray-300",
                   )}
                 >

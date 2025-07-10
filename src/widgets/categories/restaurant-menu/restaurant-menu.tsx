@@ -2,10 +2,11 @@
 
 import { useState } from "react"
 import { Package, Sandwich, Coffee, ShoppingBasket, Drumstick, Box } from "lucide-react"
-import { MenuHeader } from "@/widgets/menu-header/menu-header"
+import { MenuHeader } from "@/widgets/categories/menu-header/menu-header"
 import MenuSidebar from "@/features/categories/menu-sidebar/menu-sidebar"
-import { MenuGrid } from "@/features/categories/menu-grid/menu-grid"
+
 import { CartSidebar } from "../cart-sidebar/cart-sidebar"
+import  MenuGrid  from "@/features/categories/menu-grid/menu-grid"
 
 
 export interface MenuItem {

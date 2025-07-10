@@ -1,4 +1,4 @@
-import HomePage from '@/pages/(router)/(auth)/(home)/page'
+import HomePage from '@/pages/(router)/(layout)/(home)/page'
 import React from 'react'
 
 const Home = () => {

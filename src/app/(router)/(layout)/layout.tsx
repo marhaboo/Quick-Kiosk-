@@ -1,4 +1,4 @@
-import { Sidebar } from "@/widgets/sidebar/sidebar"
+import { Sidebar } from "@/widgets/layout/sidebar/sidebar"
 import type React from "react"
 
 const WithSidebarLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
