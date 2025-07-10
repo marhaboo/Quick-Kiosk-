@@ -31,7 +31,7 @@ export function MenuHeader({ searchQuery, onSearchChange }: MenuHeaderProps) {
 
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-white text-sm font-medium">Ресторан "Рохат"</span>
+            <span className="text-white text-sm font-medium">Ресторан &quot;Рохат&quot;</span>
           </div>
         </div>
 
