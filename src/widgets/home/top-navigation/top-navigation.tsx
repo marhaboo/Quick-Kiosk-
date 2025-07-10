@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { Button } from "@/shared/ui/button"
 import { LogIn, Briefcase, UtensilsCrossed, ArrowDown } from "lucide-react"
-import { useRef } from "react"
 
 export function TopNavigation() {
   const handleScroll = () => {
