@@ -20,7 +20,6 @@ export default function RootLayout({
     <html lang="ru">
       <body className={inter.className}>
         <Providers>
-          {/* Убираем main отсюда, так как он будет в дочерних layout'ах */}
           <div className="min-h-screen bg-black">{children}</div>
         </Providers>
       </body>

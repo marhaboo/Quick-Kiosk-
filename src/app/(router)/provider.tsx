@@ -5,10 +5,10 @@ import { makeStore } from "../store/store";
 
 const store = makeStore()
 
-export function Providers({ children }:  { children: React.ReactNode }) {
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <Provider store={store}>
-        {children}
+      {children}
     </Provider>
   );
 }
