@@ -139,7 +139,7 @@ export function RestaurantMenu() {
   const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   return (
-    <div className="px-6">
+    <div className="p-6 bg-[url('/images/bg-of-site.png')] bg-no-repeat bg-cover bg-center before:absolute before:inset-0 before:bg-black/50 before:z-0">
       {/* Верхняя панель */}
       <MenuHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 

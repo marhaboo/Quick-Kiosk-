@@ -59,7 +59,7 @@ export function TableReservation() {
   }
 
   return (
-    <div className="p-6 min-h-screen bg-[#0F0F0F]">
+    <div className="p-6 min-h-screen bg-[#0F0F0F] bg-[url('/images/bg-of-site.png')] bg-no-repeat bg-cover bg-center before:absolute before:inset-0 before:bg-black/50 before:z-0">
       {/* Заголовок */}
       <ReservationHeader />
 
