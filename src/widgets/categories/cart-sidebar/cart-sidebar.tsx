@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { Plus, Minus, MapPin, Clock, CalendarCheck, Truck, Store } from "lucide-react"
+import { Plus, Minus, MapPin, Clock, CalendarCheck, Truck, Store, User, Phone } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { Card } from "@/shared/ui/card"
 import { Input } from "@/shared/ui/input"
@@ -22,6 +22,8 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
   const [deliveryAddress, setDeliveryAddress] = useState("")
   const [selectedTable, setSelectedTable] = useState("")
   const [reservationTime, setReservationTime] = useState("")
+  const [deliveryName, setDeliveryName] = useState("")
+  const [deliveryPhone, setDeliveryPhone] = useState("")
 
   const deliveryFee = orderType === "delivery" ? 10 : 0
   const finalAmount = totalAmount + deliveryFee
@@ -159,15 +161,44 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
             {/* Дополнительные поля в зависимости от типа заказа */}
             {orderType === "delivery" && (
               <div className="space-y-3">
-                <label className="block text-white text-sm font-medium">Адрес доставки:</label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <Input
-                    value={deliveryAddress}
-                    onChange={(e) => setDeliveryAddress(e.target.value)}
-                    placeholder="Введите адрес доставки"
-                    className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
-                  />
+                <div>
+                  <label className="block text-white text-sm font-medium mb-2">Адрес доставки:</label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      value={deliveryAddress}
+                      onChange={(e) => setDeliveryAddress(e.target.value)}
+                      placeholder="Введите адрес доставки"
+                      className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-white text-sm font-medium mb-2">Имя получателя:</label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      value={deliveryName}
+                      onChange={(e) => setDeliveryName(e.target.value)}
+                      placeholder="Введите ваше имя"
+                      className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-white text-sm font-medium mb-2">Номер телефона:</label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      type="tel"
+                      value={deliveryPhone}
+                      onChange={(e) => setDeliveryPhone(e.target.value)}
+                      placeholder="+992 XX XXX XXXX"
+                      className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
+                    />
+                  </div>
                 </div>
               </div>
             )}
