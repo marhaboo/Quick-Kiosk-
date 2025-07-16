@@ -111,11 +111,10 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
                 {/* Самовывоз */}
                 <button
                   onClick={() => setOrderType("pickup")}
-                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${
-                    orderType === "pickup"
+                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${orderType === "pickup"
                       ? "border-orange-500/50 bg-orange-500/10"
                       : "border-[#3D3A46] bg-[#2A2730]/50 hover:bg-[#2A2730]/80"
-                  }`}
+                    }`}
                 >
                   <Store className="w-5 h-5 text-orange-400" />
                   <div className="text-left">
@@ -127,11 +126,10 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
                 {/* Доставка */}
                 <button
                   onClick={() => setOrderType("delivery")}
-                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${
-                    orderType === "delivery"
+                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${orderType === "delivery"
                       ? "border-orange-500/50 bg-orange-500/10"
                       : "border-[#3D3A46] bg-[#2A2730]/50 hover:bg-[#2A2730]/80"
-                  }`}
+                    }`}
                 >
                   <Truck className="w-5 h-5 text-blue-400" />
                   <div className="text-left">
@@ -143,11 +141,10 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
                 {/* Столик */}
                 <button
                   onClick={() => setOrderType("table")}
-                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${
-                    orderType === "table"
+                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${orderType === "table"
                       ? "border-orange-500/50 bg-orange-500/10"
                       : "border-[#3D3A46] bg-[#2A2730]/50 hover:bg-[#2A2730]/80"
-                  }`}
+                    }`}
                 >
                   <CalendarCheck className="w-5 h-5 text-green-400" />
                   <div className="text-left">

@@ -1,9 +1,12 @@
 import categoryReducer from "@/entities/categories/reducers/categorySlice";
+import homeReducer from "@/entities/home/reducers/homeSlice";
 import { configureStore } from "@reduxjs/toolkit";
 
 export function makeStore() {
   return configureStore({
-    reducer: { categoryReducer },
+    reducer: { 
+      category: categoryReducer, 
+      home: homeReducer },
   });
 }
 export type AppStore = ReturnType<typeof makeStore>;
