@@ -1,4 +1,5 @@
 import { AlertCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function RestaurantError({ error }: { error: string | null }) {
   return (
@@ -16,12 +17,12 @@ export default function RestaurantError({ error }: { error: string | null }) {
           >
             Вернуться назад
           </button>
-          <a
+          <Link
             href="/"
             className="block w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
           >
             На главную
-          </a>
+          </Link>
         </div>
       </div>
     </div>

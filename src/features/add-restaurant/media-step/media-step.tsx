@@ -5,6 +5,7 @@ import { Camera, Upload, Star } from "lucide-react"
 import { Card } from "@/shared/ui/card"
 import { Button } from "@/shared/ui/button"
 import type { RestaurantFormData } from "@/shared/types/restaurant-form"
+import Image from "next/image"
 
 interface MediaStepProps {
   formData: RestaurantFormData
@@ -66,7 +67,7 @@ export function MediaStep({ formData, setFormData }: MediaStepProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {formData.images.map((image, index) => (
               <div key={index} className="relative group">
-                <img
+                <Image
                   src={URL.createObjectURL(image) || "/placeholder.svg"}
                   alt={`Restaurant ${index + 1}`}
                   className="w-full h-24 object-cover rounded-xl"
