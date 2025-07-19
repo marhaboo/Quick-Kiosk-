@@ -1,11 +1,11 @@
-import categoryReducer from "@/entities/categories/reducers/categorySlice";
+import  resByIdReducer from "@/entities/restaurantById/reducers/categorySlice";
 import homeReducer from "@/entities/home/reducers/homeSlice";
 import { configureStore } from "@reduxjs/toolkit";
 
 export function makeStore() {
   return configureStore({
     reducer: { 
-      category: categoryReducer, 
+      resById: resByIdReducer , 
       home: homeReducer },
   });
 }

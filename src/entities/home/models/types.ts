@@ -32,6 +32,14 @@ export interface MenuItem {
   createdAt: string;
 }
 
+export interface ShortMenuItem {
+  id: number
+  name: string
+  price: number
+  image: string
+  category: string
+  description?: string
+}
 export interface Table {
   id: number;
   restaurantId: number;

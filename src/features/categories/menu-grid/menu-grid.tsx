@@ -5,12 +5,12 @@ import Image from "next/image"
 import { Plus, X, ShoppingCart, ChevronDown } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { Card } from "@/shared/ui/card"
-import { MenuItem } from "@/widgets/categories/restaurant-menu/restaurant-menu"
+import { ShortMenuItem } from "@/entities/home/models/types"
 
 interface MenuGridProps {
-  items: MenuItem[]
+  items: ShortMenuItem[]
   cartItems: { id: number; quantity: number }[]
-  onAddToCart: (item: MenuItem) => void
+  onAddToCart: (item: ShortMenuItem) => void
   onRemoveFromCart?: (itemId: number) => void
 }
 
@@ -39,6 +39,7 @@ export default function MenuGrid({ items, cartItems, onAddToCart, onRemoveFromCa
   const hasMore = visibleCount < items.length
   const canShowLess = visibleCount > 6
 
+
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6 pt-12">
@@ -47,7 +48,7 @@ export default function MenuGrid({ items, cartItems, onAddToCart, onRemoveFromCa
             <div className="absolute -top-14 left-1/2 transform -translate-x-1/2 z-10">
               <div className="w-24 h-24 rounded-full overflow-hidden bg-white border-4 border-white shadow-lg">
                 <Image
-                  src={item.image || "/placeholder.svg"}
+                  src={item.image || "/images/placeholder.png"}
                   alt={item.name}
                   width={96}
                   height={96}
@@ -139,8 +140,9 @@ export default function MenuGrid({ items, cartItems, onAddToCart, onRemoveFromCa
 
       <div className="text-center mt-4">
         <p className="text-gray-400 text-sm">
-          Показано {visibleCount} из {items.length} товаров
+          Показано {Math.min(visibleCount, items.length)} из {items.length} товаров
         </p>
+
       </div>
     </div>
   )

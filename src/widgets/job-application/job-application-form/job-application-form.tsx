@@ -2,12 +2,15 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ArrowLeft, Upload, User, Mail, Phone, MapPin, FileText, Briefcase } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { Card } from "@/shared/ui/card"
 import { Input } from "@/shared/ui/input"
 import Link from "next/link"
+import { useDispatch } from "react-redux"
+import { postJobApplication } from "@/entities/job-application/api/job-application-api"
+import { AppDispatch } from "@/app/store/store"
 
 interface FormData {
   firstName: string
@@ -33,6 +36,11 @@ export function JobApplicationForm() {
     motivation: "",
     resume: null,
   })
+  const dispatch: AppDispatch = useDispatch()
+
+  useEffect(() => {
+    // dispatch(postJobApplication(formData))
+  }, [dispatch, postJobApplication])
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)

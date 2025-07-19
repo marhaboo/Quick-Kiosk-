@@ -1,12 +1,13 @@
 "use client"
 
 import { cn } from "@/shared/lib/utils"
+import Image from "next/image"
 import type React from "react"
 
 interface Category {
   id: string
   name: string
-  icon: React.ComponentType<{ className?: string }>
+  image: string
 }
 
 interface MenuSidebarProps {
@@ -26,7 +27,6 @@ export default function MenuSidebar({ categories, selectedCategory, onCategorySe
       {/* Горизонтальная навигация */}
       <nav className="flex items-center gap-10 overflow-x-auto scrollbar-hide border border-[#3D3A46] rounded-3xl p-4">
         {categories.map((category) => {
-          const Icon = category.icon
 
           return (
             <button
@@ -43,13 +43,18 @@ export default function MenuSidebar({ categories, selectedCategory, onCategorySe
                     : "bg-[#222125]/60 hover:bg-[#222125]/80 border-gray-600/50",
                 )}
               >
-                <Icon
+                <Image
+                width={24}
+                height={24}
+                src={category?.image}
+                alt={category.name}
                   className={cn(
-                    "w-6 h-6 transition-all duration-200",
-                    selectedCategory === category.id
-                      ? "text-orange-400 scale-110"
-                      : "text-gray-300 group-hover:text-white",
-                  )}
+  "w-6 h-6 transition-all duration-200",
+  selectedCategory === category.id
+    ? "scale-110"
+    : "group-hover:opacity-90",
+)}
+
                 />
 
                 {/* Активный индикатор */}

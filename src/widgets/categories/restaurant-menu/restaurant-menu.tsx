@@ -1,112 +1,64 @@
 "use client"
 
-import { useState } from "react"
-import { Package, Sandwich, Coffee, ShoppingBasket, Drumstick, Box } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Package } from "lucide-react"
 import { MenuHeader } from "@/widgets/categories/menu-header/menu-header"
 import MenuSidebar from "@/features/categories/menu-sidebar/menu-sidebar"
-
 import { CartSidebar } from "../cart-sidebar/cart-sidebar"
-import  MenuGrid  from "@/features/categories/menu-grid/menu-grid"
+import MenuGrid from "@/features/categories/menu-grid/menu-grid"
+import { getRestaurantById } from "@/entities/restaurantById/api/api"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "@/app/store/store"
+import { API_BASE_URL } from "@/shared/utils/image-utils"
+import { ShortMenuItem } from "@/entities/home/models/types"
 
 
-export interface MenuItem {
-  id: number
-  name: string
-  price: number
-  image: string
-  category: string
-  description?: string
-}
-
-export interface CartItem extends MenuItem {
+export interface CartItem extends ShortMenuItem {
   quantity: number
 }
 
-const menuItems: MenuItem[] = [
-  {
-    id: 1,
-    name: "Шашлык из баранины",
-    price: 11.5,
-    image: "/placeholder.svg?height=120&width=120",
-    category: "all",
-    description: "Сочный шашлык из баранины",
-  },
-  {
-    id: 2,
-    name: "Чизбургер классический",
-    price: 15.0,
-    image: "/placeholder.svg?height=120&width=120",
-    category: "burgers",
-  },
-  {
-    id: 3,
-    name: "Кока-кола 0.5л",
-    price: 5.0,
-    image: "/placeholder.svg?height=120&width=120",
-    category: "drinks",
-  },
-  {
-    id: 4,
-    name: "Куриные крылышки BBQ",
-    price: 18.0,
-    image: "/placeholder.svg?height=120&width=120",
-    category: "chicken",
-  },
-  {
-    id: 5,
-    name: "Комбо Мега",
-    price: 25.0,
-    image: "/placeholder.svg?height=120&width=120",
-    category: "combo",
-  },
-  {
-    id: 6,
-    name: "Картофель фри большой",
-    price: 8.0,
-    image: "/placeholder.svg?height=120&width=120",
-    category: "sides",
-  },
-]
 
-const categories = [
-  {
-    id: "all",
-    name: "Все продукты",
-    icon: Package,
-  },
-  {
-    id: "burgers",
-    name: "Бургеры",
-    icon: Sandwich,
-  },
-  {
-    id: "drinks",
-    name: "Напитки",
-    icon: Coffee,
-  },
-  {
-    id: "sides",
-    name: "Гарниры",
-    icon: ShoppingBasket,
-  },
-  {
-    id: "chicken",
-    name: "Курица",
-    icon: Drumstick,
-  },
-  {
-    id: "combo",
-    name: "Комбо наборы",
-    icon: Box,
-  },
-]
-
-export function RestaurantMenu() {
+export function RestaurantMenu({ restaurantId }: { restaurantId: string; }) {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [searchQuery, setSearchQuery] = useState("")
 
-  const addToCart = (item: MenuItem) => {
+  const { currentRestaurant } = useSelector((state: RootState) => state.resById)
+  const dispatch: AppDispatch = useDispatch()
+  const categories = [
+    {
+      id: "all",
+      name: "Все продукты",
+      image: "/images/all-category.svg",
+    },
+    ...(currentRestaurant?.categories?.map((cat) => ({
+      id: cat.id.toString(),
+      name: cat.name,
+      image: API_BASE_URL + cat.imageUrl
+    })) ?? []),
+  ]
+
+    const isImageUrl = (url:string) => {
+    return url.startsWith("/") 
+  }
+
+  const menuItems: ShortMenuItem[] = currentRestaurant?.menu
+    ?
+    currentRestaurant?.menu?.map((item) => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      image: isImageUrl(item.imageUrl) ? API_BASE_URL + item.imageUrl : "/images/placeholder.png",
+      category: item.categoryId.toString() || "all",
+      description: item.description
+    })) : []
+
+
+  useEffect(() => {
+    dispatch(getRestaurantById(restaurantId))
+  }, [dispatch, restaurantId])
+
+  const addToCart = (item: ShortMenuItem) => {
     setCartItems((prev) => {
       const existingItem = prev.find((cartItem) => cartItem.id === item.id)
       if (existingItem) {
@@ -141,7 +93,7 @@ export function RestaurantMenu() {
   return (
     <div className="p-6 bg-[url('/images/bg-of-site.png')] bg-no-repeat bg-cover bg-center before:absolute before:inset-0 before:bg-black/50 before:z-0">
       {/* Верхняя панель */}
-      <MenuHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <MenuHeader searchQuery={searchQuery} restaurant={currentRestaurant!} onSearchChange={setSearchQuery} />
 
       <div className="flex gap-7">
         {/* Основной контент */}

@@ -1,23 +1,25 @@
 "use client"
 
-import { Search, User2, CalendarCheck, Home, Bell, Settings, ChevronDown } from "lucide-react"
+import { Search, User2, CalendarCheck, Home, Bell, Settings, ChevronDown, MapPin } from "lucide-react"
 import { Input } from "@/shared/ui/input"
 import { Button } from "@/shared/ui/button"
 import Link from "next/link"
+import { Restaurant } from "@/entities/home/models/types"
 
 interface MenuHeaderProps {
   searchQuery: string
   onSearchChange: (query: string) => void
+  restaurant: Restaurant
 }
 
-export function MenuHeader({ searchQuery, onSearchChange }: MenuHeaderProps) {
+export function MenuHeader({ searchQuery, onSearchChange, restaurant }: MenuHeaderProps) {
   return (
     <div className="space-y-4">
       {/* Верхняя панель навигации */}
       <div className="flex items-center justify-between">
         {/* Левая часть - навигация */}
         <div className="flex items-center gap-4">
-          <Link href="/">
+          <Link passHref href="/">
             <Button
               variant="ghost"
               className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#2A2730] hover:bg-orange-500/20 border border-[#3D3A46] hover:border-orange-500/50 text-white hover:text-orange-400 transition-all duration-200"
@@ -31,7 +33,7 @@ export function MenuHeader({ searchQuery, onSearchChange }: MenuHeaderProps) {
 
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-white text-sm font-medium">Ресторан &quot;Рохат&quot;</span>
+            <span className="text-white text-sm font-medium">Ресторан &quot;{restaurant?.name ? restaurant?.name : "Без названия"}&quot;</span>
           </div>
         </div>
 
@@ -120,13 +122,18 @@ export function MenuHeader({ searchQuery, onSearchChange }: MenuHeaderProps) {
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span className="text-green-400 text-sm font-medium">Открыто до 22:00</span>
+            <span className="text-green-400 text-sm font-medium">
+              {restaurant?.openingHours
+                ? `Открыто до ${restaurant?.openingHours.split('–')[1]}`
+                : 'Время не указано'}
+            </span>
           </div>
           <div className="w-px h-4 bg-[#3D3A46]"></div>
           <div className="flex items-center gap-2">
-            <span className="text-gray-400 text-sm">Средний чек:</span>
-            <span className="text-white font-semibold">150 сомони</span>
+            <MapPin className="w-4 h-4 text-gray-400" />
+            <span className="text-white text-sm">{restaurant?.address ? restaurant?.address : "Адрес не указан"}</span>
           </div>
+
           <div className="w-px h-4 bg-[#3D3A46]"></div>
           <div className="flex items-center gap-2">
             <span className="text-gray-400 text-sm">Время доставки:</span>
@@ -145,9 +152,11 @@ export function MenuHeader({ searchQuery, onSearchChange }: MenuHeaderProps) {
               </div>
             ))}
           </div>
-          <span className="text-white font-semibold ml-2">4.8</span>
-          <span className="text-gray-400 text-sm">(234 отзыва)</span>
+          <span className="text-white font-semibold ml-2">
+            {restaurant?.rating ? `${restaurant?.rating} / 5` : 'Нет рейтинга'}
+          </span>
         </div>
+
       </div>
     </div>
   )
