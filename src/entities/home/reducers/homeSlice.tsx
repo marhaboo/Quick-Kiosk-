@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getRestaurants } from "../api/home-api";
-import { MenuItem, Restaurant, Table } from "../models/types";
+import { Restaurant } from "../models/types";
 
 const initialState = {
   data: [] as Restaurant[],

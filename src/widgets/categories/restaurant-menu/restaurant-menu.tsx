@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Package } from "lucide-react"
 import { MenuHeader } from "@/widgets/categories/menu-header/menu-header"
 import MenuSidebar from "@/features/categories/menu-sidebar/menu-sidebar"
 import { CartSidebar } from "../cart-sidebar/cart-sidebar"
