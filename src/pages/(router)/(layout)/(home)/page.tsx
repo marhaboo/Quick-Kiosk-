@@ -1,3 +1,4 @@
+"use client"
 import { RestaurantList } from "@/features/home/restautrant-list/restaurant-list";
 import { AddRestaurantSection } from "@/widgets/home/add-restaurant-section/add-restaurant-section";
 import { TopNavigation } from "@/widgets/home/top-navigation/top-navigation";
