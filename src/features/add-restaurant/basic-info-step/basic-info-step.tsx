@@ -88,20 +88,6 @@ export function BasicInfoStep({ formData, setFormData }: BasicInfoStepProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-gray-300 text-sm font-medium mb-2">Ценовая категория *</label>
-            <select
-              value={formData.priceRange}
-              onChange={(e) => handleInputChange("priceRange", e.target.value)}
-              className="w-full bg-[#2A2730] border border-[#3D3A46] text-white rounded-xl px-4 py-3"
-              required
-            >
-              <option value="">Выберите ценовую категорию</option>
-              <option value="budget">$ - Бюджетно (до 50 сомони)</option>
-              <option value="moderate">$$ - Умеренно (50-150 сомони)</option>
-              <option value="expensive">$$$ - Дорого (150+ сомони)</option>
-            </select>
-          </div>
 
           <div>
             <label className="block text-gray-300 text-sm font-medium mb-2">Вместимость *</label>

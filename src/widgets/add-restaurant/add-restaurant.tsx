@@ -28,7 +28,7 @@ const initialFormData: RestaurantFormData = {
   openingHours: {
     monday: { open: "09:00", close: "22:00", closed: false },
     tuesday: { open: "09:00", close: "22:00", closed: false },
-    wednesday: { open: "09:00", close: "22:00", closed: false },
+    wednesday: { open: "09:00", close: "22:00", closed:  false},
     thursday: { open: "09:00", close: "22:00", closed: false },
     friday: { open: "09:00", close: "22:00", closed: false },
     saturday: { open: "09:00", close: "22:00", closed: false },

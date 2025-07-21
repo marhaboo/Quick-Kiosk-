@@ -6,10 +6,14 @@ import { Plus, Minus, MapPin, Clock, CalendarCheck, Truck, Store, User, Phone } 
 import { Button } from "@/shared/ui/button"
 import { Card } from "@/shared/ui/card"
 import { Input } from "@/shared/ui/input"
-import type { CartItem } from "../restaurant-menu/restaurant-menu"
+import { useDispatch } from "react-redux"
+import type { AppDispatch } from "@/app/store/store"
+import { postOrder } from "@/entities/cart-order/api/api-order"
+import { MenuItem } from "@/entities/home/models/types"
+import { OrderItem, OrderItems } from "@/entities/cart-order/models/type"
 
 interface CartSidebarProps {
-  items: CartItem[]
+  items: MenuItem[]
   totalAmount: number
   onUpdateQuantity: (itemId: number, quantity: number) => void
   onRemoveItem: (itemId: number) => void
@@ -17,16 +21,149 @@ interface CartSidebarProps {
 
 type OrderType = "pickup" | "delivery" | "table"
 
-export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSidebarProps) {
+export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem }: CartSidebarProps) {
   const [orderType, setOrderType] = useState<OrderType>("pickup")
   const [deliveryAddress, setDeliveryAddress] = useState("")
   const [selectedTable, setSelectedTable] = useState("")
-  const [reservationTime, setReservationTime] = useState("")
-  const [deliveryName, setDeliveryName] = useState("")
-  const [deliveryPhone, setDeliveryPhone] = useState("")
+  const [bookingDateTime, setBookingDateTime] = useState("")
+  const [fullName, setFullName] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const deliveryFee = orderType === "delivery" ? 10 : 0
   const finalAmount = totalAmount + deliveryFee
+  const dispatch: AppDispatch = useDispatch()
+
+  const handleClearCart = () => {
+    items.forEach((item) => onRemoveItem(item.id))
+  }
+
+  const validateForm = (): boolean => {
+    if (items.length === 0) {
+      alert("Корзина пуста")
+      return false
+    }
+
+    if (orderType === "delivery") {
+      if (!deliveryAddress.trim()) {
+        alert("Введите адрес доставки")
+        return false
+      }
+      if (!fullName.trim()) {
+        alert("Введите полное имя")
+        return false
+      }
+      if (!phoneNumber.trim()) {
+        alert("Введите номер телефона")
+        return false
+      }
+    }
+
+    if (orderType === "table") {
+      if (!selectedTable) {
+        alert("Выберите столик")
+        return false
+      }
+      if (!bookingDateTime) {
+        alert("Выберите время бронирования")
+        return false
+      }
+      if (!fullName.trim()) {
+        alert("Введите полное имя")
+        return false
+      }
+      if (!phoneNumber.trim()) {
+        alert("Введите номер телефона")
+        return false
+      }
+    }
+
+    if (orderType === "pickup") {
+      if (!fullName.trim()) {
+        alert("Введите полное имя")
+        return false
+      }
+      if (!phoneNumber.trim()) {
+        alert("Введите номер телефона")
+        return false
+      }
+    }
+
+    return true
+  }
+
+  const handleSubmitOrder = async () => {
+    if (!validateForm()) return
+
+    setIsSubmitting(true)
+
+    // Преобразуем CartItem в OrderItem
+    const orderItems: OrderItem[] = items.map((item) => ({
+      productId: item.id,
+      quantity: item.quantity,
+      priceAtMoment: item.price,
+    }))
+
+    // Формируем данные заказа согласно интерфейсу OrderItems
+    const orderData: OrderItems = {
+      items: orderItems,
+      fullName: fullName.trim(),
+      phoneNumber: phoneNumber.trim(),
+      tableId: orderType === "table" ? Number.parseInt(selectedTable) : 0,
+      type: orderType,
+      deliveryAddress: orderType === "delivery" ? deliveryAddress.trim() : null,
+      bookingDateTime: orderType === "table" ? bookingDateTime : null,
+      status: "pending", // Начальный статус заказа
+      totalAmount: finalAmount,
+    }
+
+
+    try {
+      await dispatch(postOrder(orderData)).unwrap()
+      setIsSubmitted(true)
+      // Очищаем форму после успешного заказа
+      setFullName("")
+      setPhoneNumber("")
+      setDeliveryAddress("")
+      setSelectedTable("")
+      setBookingDateTime("")
+      // Очищаем корзину
+      handleClearCart()
+    } catch (error) {
+      console.error("Ошибка отправки заказа:", error)
+      alert("Не удалось отправить заказ. Попробуйте позже.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  // Показываем сообщение об успешной отправке
+  if (isSubmitted) {
+    return (
+      <div className="w-80 backdrop-blur-md">
+        <div className="border border-[#3D3A46] rounded-3xl p-6 text-center">
+          <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-white mb-2">Заказ принят!</h3>
+          <p className="text-gray-400 mb-4">
+            {orderType === "pickup" && "Ваш заказ будет готов через 15-20 минут"}
+            {orderType === "delivery" && "Ваш заказ будет доставлен в течение 30-45 минут"}
+            {orderType === "table" && "Столик забронирован на указанное время"}
+          </p>
+          <Button
+            onClick={() => setIsSubmitted(false)}
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl"
+          >
+            Сделать новый заказ
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="w-80 backdrop-blur-md">
@@ -37,6 +174,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
           <Button
             variant="ghost"
             size="sm"
+            onClick={handleClearCart}
             className="text-orange-400 hover:text-orange-300 hover:bg-orange-500/10 px-4 py-2 rounded-xl border border-orange-500/30"
           >
             Очистить корзину
@@ -44,7 +182,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
         </div>
 
         {/* Список товаров */}
-        <div className="space-y-3 mb-6 max-h-96 min-h-96 overflow-y-auto">
+        <div className="space-y-3 mb-6 overflow-y-auto max-h-96">
           {items.length === 0 ? (
             <p className="text-gray-400 text-center py-8">Корзина пуста</p>
           ) : (
@@ -54,21 +192,19 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
                   {/* Изображение товара */}
                   <div className="w-[100px] h-[104px] rounded-2xl overflow-hidden bg-white/10 flex-shrink-0">
                     <Image
-                      src={item.image || "/placeholder.svg"}
+                      src={item.imageUrl || "/placeholder.svg"}
                       alt={item.name}
                       width={100}
                       height={104}
                       className="w-full h-full object-cover"
                     />
                   </div>
-
                   {/* Информация о товаре */}
                   <div className="flex-1 min-w-0">
                     <h4 className="text-white font-semibold text-base mb-1">{item.name}</h4>
                     <div className="flex flex-col gap-2">
                       {/* Цена */}
                       <p className="text-white font-bold text-sm">{item.price.toFixed(2)} сомони</p>
-
                       {/* Кнопки изменения количества */}
                       <div className="flex items-center bg-[#2A2730] rounded-full p-1 w-fit border border-[#3D3A46]">
                         <div className="bg-[#1A1A1A] rounded-full w-8 h-8 flex items-center justify-center">
@@ -106,7 +242,6 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
             {/* Выбор типа заказа */}
             <div className="space-y-3">
               <h3 className="text-white font-semibold text-sm">Тип заказа:</h3>
-
               <div className="grid grid-cols-1 gap-2">
                 {/* Самовывоз */}
                 <button
@@ -155,11 +290,42 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
               </div>
             </div>
 
-            {/* Дополнительные поля в зависимости от типа заказа */}
+            {/* Общие поля для всех типов заказов */}
+            <div className="space-y-3">
+              <div>
+                <label className="block text-white text-sm font-medium mb-2">Полное имя: *</label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Введите ваше полное имя"
+                    className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-white text-sm font-medium mb-2">Номер телефона: *</label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    placeholder="+992 XX XXX XXXX"
+                    className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Дополнительные поля для доставки */}
             {orderType === "delivery" && (
               <div className="space-y-3">
                 <div>
-                  <label className="block text-white text-sm font-medium mb-2">Адрес доставки:</label>
+                  <label className="block text-white text-sm font-medium mb-2">Адрес доставки: *</label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
@@ -167,47 +333,23 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
                       onChange={(e) => setDeliveryAddress(e.target.value)}
                       placeholder="Введите адрес доставки"
                       className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-white text-sm font-medium mb-2">Имя получателя:</label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                      value={deliveryName}
-                      onChange={(e) => setDeliveryName(e.target.value)}
-                      placeholder="Введите ваше имя"
-                      className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-white text-sm font-medium mb-2">Номер телефона:</label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                      type="tel"
-                      value={deliveryPhone}
-                      onChange={(e) => setDeliveryPhone(e.target.value)}
-                      placeholder="+992 XX XXX XXXX"
-                      className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
+                      required
                     />
                   </div>
                 </div>
               </div>
             )}
 
+            {/* Дополнительные поля для столика */}
             {orderType === "table" && (
               <div className="space-y-3">
                 <div>
-                  <label className="block text-white text-sm font-medium mb-2">Номер столика:</label>
+                  <label className="block text-white text-sm font-medium mb-2">Номер столика: *</label>
                   <select
                     value={selectedTable}
                     onChange={(e) => setSelectedTable(e.target.value)}
                     className="w-full bg-[#2A2730] border border-[#3D3A46] text-white rounded-xl px-3 py-2"
+                    required
                   >
                     <option value="">Выберите столик</option>
                     <option value="1">Столик №1 (2 места)</option>
@@ -217,14 +359,15 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
                   </select>
                 </div>
                 <div>
-                  <label className="block text-white text-sm font-medium mb-2">Время бронирования:</label>
+                  <label className="block text-white text-sm font-medium mb-2">Время бронирования: *</label>
                   <div className="relative">
                     <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
                       type="datetime-local"
-                      value={reservationTime}
-                      onChange={(e) => setReservationTime(e.target.value)}
+                      value={bookingDateTime}
+                      onChange={(e) => setBookingDateTime(e.target.value)}
                       className="bg-[#2A2730] border-[#3D3A46] text-white rounded-xl pl-10"
+                      required
                     />
                   </div>
                 </div>
@@ -250,10 +393,20 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity }: CartSideba
             </div>
 
             {/* Кнопка оформления заказа */}
-            <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl text-lg">
-              {orderType === "pickup" && "Заказать самовывоз"}
-              {orderType === "delivery" && "Заказать доставку"}
-              {orderType === "table" && "Забронировать столик"}
+            <Button
+              onClick={handleSubmitOrder}
+              disabled={isSubmitting}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? (
+                "Отправка..."
+              ) : (
+                <>
+                  {orderType === "pickup" && "Заказать самовывоз"}
+                  {orderType === "delivery" && "Заказать доставку"}
+                  {orderType === "table" && "Забронировать столик"}
+                </>
+              )}
             </Button>
           </div>
         )}
