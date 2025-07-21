@@ -9,11 +9,11 @@ import { Input } from "@/shared/ui/input"
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "@/app/store/store"
 import { postOrder } from "@/entities/cart-order/api/api-order"
-import { MenuItem } from "@/entities/home/models/types"
 import { OrderItem, OrderItems } from "@/entities/cart-order/models/type"
+import { CartItem } from "../restaurant-menu/restaurant-menu"
 
 interface CartSidebarProps {
-  items: MenuItem[]
+  items: CartItem[]
   totalAmount: number
   onUpdateQuantity: (itemId: number, quantity: number) => void
   onRemoveItem: (itemId: number) => void
@@ -192,7 +192,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                   {/* Изображение товара */}
                   <div className="w-[100px] h-[104px] rounded-2xl overflow-hidden bg-white/10 flex-shrink-0">
                     <Image
-                      src={item.imageUrl || "/placeholder.svg"}
+                      src={item.image || "/placeholder.svg"}
                       alt={item.name}
                       width={100}
                       height={104}
