@@ -17,6 +17,9 @@ export const homeSlice = createSlice({
         state.data = action.payload.data
         state.loading = false
       })
+      .addCase(getRestaurants.pending, (state) => {
+        state.loading = true
+      })
   }
 
 })

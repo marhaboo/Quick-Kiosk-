@@ -7,7 +7,7 @@ export const postJobApplication = createAsyncThunk(
   "jobApplication/post",
   async (data: JobApplicationItems, { rejectWithValue }) => {
     try {
-      const response = await axiosRequest.post("/job-applications", data);
+      const response = await axiosRequest.post("/JobApplication", data);
       return response.data;
     } catch (error) {
       const err = error as AxiosError

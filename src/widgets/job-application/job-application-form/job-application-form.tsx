@@ -1,46 +1,47 @@
 "use client"
-
 import type React from "react"
-
-import { useEffect, useState } from "react"
-import { ArrowLeft, Upload, User, Mail, Phone, MapPin, FileText, Briefcase } from "lucide-react"
+import { useState } from "react"
+import { ArrowLeft, User, Mail, Phone, MapPin, FileText, Briefcase } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { Card } from "@/shared/ui/card"
 import { Input } from "@/shared/ui/input"
 import Link from "next/link"
 import { useDispatch } from "react-redux"
 import { postJobApplication } from "@/entities/job-application/api/job-application-api"
-import { AppDispatch } from "@/app/store/store"
+import type { AppDispatch } from "@/app/store/store"
 
 interface FormData {
   firstName: string
   lastName: string
+  restaurantName: string
   email: string
   phone: string
   address: string
-  position: string
-  experience: string
-  motivation: string
-  resume: File | null
+  desiredPosition: string
+  workExperience: string
+  motivationLetter: string
+  resumeUrl: string
 }
 
 export function JobApplicationForm() {
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
+    restaurantName: "",
     email: "",
     phone: "",
     address: "",
-    position: "",
-    experience: "",
-    motivation: "",
-    resume: null,
+    desiredPosition: "",
+    workExperience: "",
+    motivationLetter: "",
+    resumeUrl: "",
   })
+
   const dispatch: AppDispatch = useDispatch()
 
-  useEffect(() => {
-    // dispatch(postJobApplication(formData))
-  }, [dispatch, postJobApplication])
+  // useEffect(() => {
+  // dispatch(postJobApplication(formData))
+  // }, [dispatch, postJobApplication])
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -49,20 +50,22 @@ export function JobApplicationForm() {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null
-    setFormData((prev) => ({ ...prev, resume: file }))
+  const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, resumeUrl: e.target.value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-
-    // Имитация отправки формы
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    try {
+      await dispatch(postJobApplication(formData)).unwrap()
+      setIsSubmitted(true)
+    } catch (error) {
+      console.error("Ошибка отправки заявки:", error)
+      alert("Не удалось отправить заявку. Попробуйте позже.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (isSubmitted) {
@@ -115,7 +118,6 @@ export function JobApplicationForm() {
               </div>
               <h2 className="text-xl font-bold text-white">Личная информация</h2>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">Имя *</label>
@@ -128,7 +130,6 @@ export function JobApplicationForm() {
                   required
                 />
               </div>
-
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">Фамилия *</label>
                 <Input
@@ -140,7 +141,16 @@ export function JobApplicationForm() {
                   required
                 />
               </div>
-
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">Название ресторана</label>
+                <Input
+                  type="text"
+                  value={formData.restaurantName}
+                  onChange={(e) => handleInputChange("restaurantName", e.target.value)}
+                  className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl"
+                  placeholder="Введите название ресторана"
+                />
+              </div>
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">Email *</label>
                 <div className="relative">
@@ -155,7 +165,6 @@ export function JobApplicationForm() {
                   />
                 </div>
               </div>
-
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">Телефон *</label>
                 <div className="relative">
@@ -170,17 +179,15 @@ export function JobApplicationForm() {
                   />
                 </div>
               </div>
-
-              <div className="md:col-span-2">
+              <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">Адрес</label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-3 text-gray-400 w-4 h-4" />
-                  <textarea
+                  <Input
                     value={formData.address}
                     onChange={(e) => handleInputChange("address", e.target.value)}
                     className="w-full bg-[#2A2730] border border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10 pr-4 py-3 resize-none"
                     placeholder="Ваш адрес проживания"
-                    rows={2}
                   />
                 </div>
               </div>
@@ -195,13 +202,12 @@ export function JobApplicationForm() {
               </div>
               <h2 className="text-xl font-bold text-white">Информация о работе</h2>
             </div>
-
             <div className="space-y-6">
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">Желаемая должность *</label>
                 <select
-                  value={formData.position}
-                  onChange={(e) => handleInputChange("position", e.target.value)}
+                  value={formData.desiredPosition}
+                  onChange={(e) => handleInputChange("desiredPosition", e.target.value)}
                   className="w-full bg-[#2A2730] border border-[#3D3A46] text-white rounded-xl px-4 py-3"
                   required
                 >
@@ -215,23 +221,21 @@ export function JobApplicationForm() {
                   <option value="other">Другое</option>
                 </select>
               </div>
-
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">Опыт работы</label>
                 <textarea
-                  value={formData.experience}
-                  onChange={(e) => handleInputChange("experience", e.target.value)}
+                  value={formData.workExperience}
+                  onChange={(e) => handleInputChange("workExperience", e.target.value)}
                   className="w-full bg-[#2A2730] border border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl px-4 py-3 resize-none"
                   placeholder="Расскажите о вашем опыте работы в сфере общественного питания"
                   rows={4}
                 />
               </div>
-
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">Мотивационное письмо</label>
                 <textarea
-                  value={formData.motivation}
-                  onChange={(e) => handleInputChange("motivation", e.target.value)}
+                  value={formData.motivationLetter}
+                  onChange={(e) => handleInputChange("motivationLetter", e.target.value)}
                   className="w-full bg-[#2A2730] border border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl px-4 py-3 resize-none"
                   placeholder="Почему вы хотите работать в нашей компании?"
                   rows={4}
@@ -248,28 +252,32 @@ export function JobApplicationForm() {
               </div>
               <h2 className="text-xl font-bold text-white">Резюме</h2>
             </div>
-
-            <div className="border-2 border-dashed border-[#3D3A46] rounded-xl p-8 text-center hover:border-orange-500/50 transition-colors">
-              <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-300 mb-2">Загрузите ваше резюме</p>
-              <p className="text-gray-500 text-sm mb-4">PDF, DOC, DOCX до 5MB</p>
-              <input
-                type="file"
-                onChange={handleFileChange}
-                accept=".pdf,.doc,.docx"
-                className="hidden"
-                id="resume-upload"
-              />
-              <label htmlFor="resume-upload">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/30 rounded-xl"
-                >
-                  Выбрать файл
-                </Button>
-              </label>
-              {formData.resume && <p className="text-green-400 text-sm mt-2">✓ {formData.resume.name}</p>}
+            <div>
+              <div className="border-2 border-dashed border-[#3D3A46] rounded-xl p-8 text-center hover:border-orange-500/50 transition-colors">
+                <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-300 mb-2">Ссылка на ваше резюме</p>
+                <p className="text-gray-500 text-sm mb-4">Google Drive, Dropbox, OneDrive или другая ссылка</p>
+                <Input
+                  type="url"
+                  value={formData.resumeUrl}
+                  onChange={handleResumeChange}
+                  className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl mb-4"
+                  placeholder="https://drive.google.com/file/d/... или другая ссылка"
+                />
+                {formData.resumeUrl && (
+                  <div className="mt-2">
+                    <p className="text-green-400 text-sm">✓ Ссылка добавлена</p>
+                    <a
+                      href={formData.resumeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-orange-400 hover:text-orange-300 text-sm underline"
+                    >
+                      Проверить ссылку
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           </Card>
 
