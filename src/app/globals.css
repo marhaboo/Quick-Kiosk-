@@ -72,5 +72,5 @@ body {
 input:-webkit-autofill {
   box-shadow: 0 0 0px 1000px #222125 inset !important;
   -webkit-text-fill-color: white !important;
-  border: 1px solid #3D3A46;
+  border: 1px solid #3d3a46;
 }
