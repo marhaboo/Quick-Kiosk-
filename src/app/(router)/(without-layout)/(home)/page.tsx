@@ -1,3 +1,4 @@
+"use client"
 import HomePage from '@/pages/(router)/(layout)/(home)/page'
 import React from 'react'
 
