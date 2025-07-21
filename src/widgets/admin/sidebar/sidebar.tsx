@@ -39,7 +39,7 @@ function SidebarSkeleton() {
 
 export default function Sidebar({ activeTab, onTabChange }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading] = useState(false)
 
   if (isLoading) {
     return <SidebarSkeleton />

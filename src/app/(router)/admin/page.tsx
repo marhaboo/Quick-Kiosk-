@@ -10,7 +10,7 @@ import { BarChart3 } from "lucide-react"
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard")
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading] = useState(false)
 
   const renderContent = () => {
     switch (activeTab) {

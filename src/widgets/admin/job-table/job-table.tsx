@@ -123,7 +123,7 @@ export default function JobTable({ isLoading }: JobTableProps) {
       <Card className="border border-[#333333] bg-[#1a1a1a] overflow-hidden glass-effect transition-all duration-300">
         <CardContent className="p-0">
           <div className="divide-y divide-[#333333]">
-            {jobApplications.map((application, index) => (
+            {jobApplications.map((application) => (
               <div
                 key={application.id}
                 className="p-6 hover:bg-gray-800/30 transition-all duration-300 animate-fade-in-up"
