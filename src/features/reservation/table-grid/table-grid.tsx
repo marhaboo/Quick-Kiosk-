@@ -1,103 +1,146 @@
 "use client"
 
 import { cn } from "@/shared/utils/cn"
-import { Table } from "@/widgets/reservation/table-reservation/table-reservation"
+import { motion, AnimatePresence } from "framer-motion"
+import { Users, Clock, CheckCircle, AlertCircle } from "lucide-react"
 
+interface TableProps {
+  id: number
+  restaurantId: number
+  seats: number
+  status: string
+}
 
 interface TableGridProps {
-  tables: Table[]
-  selectedTable: string | null
-  onTableSelect: (tableId: string) => void
+  tables: TableProps[]
+  selectedTable: number | null
+  onTableSelect: (tableId: number) => void
+}
+
+// Добавьте type guard и нормализацию
+const isValidStatus = (status: string): status is "available" | "dine-in" | "reserved" | "cleaning" => {
+  return ["available", "dine-in", "reserved", "cleaning"].includes(status)
+}
+
+const normalizeStatus = (status: string): "available" | "dine-in" | "reserved" | "cleaning" => {
+  if (isValidStatus(status)) {
+    return status
+  }
+  return "available"
+}
+
+const statusConfig = {
+  available: {
+    color: "bg-green-500/20 border-green-500/50 hover:bg-green-500/30",
+    textColor: "text-green-400",
+    icon: CheckCircle,
+    label: "Свободен",
+  },
+  "dine-in": {
+    color: "bg-blue-500/20 border-blue-500/50",
+    textColor: "text-blue-400",
+    icon: Users,
+    label: "Занят",
+  },
+  reserved: {
+    color: "bg-orange-500/20 border-orange-500/50",
+    textColor: "text-orange-400",
+    icon: Clock,
+    label: "Забронирован",
+  },
+  cleaning: {
+    color: "bg-red-500/20 border-red-500/50",
+    textColor: "text-red-400",
+    icon: AlertCircle,
+    label: "Уборка",
+  },
 }
 
 export function TableGrid({ tables, selectedTable, onTableSelect }: TableGridProps) {
-  const getTableStatusColor = (status: Table["status"], isSelected: boolean) => {
-    if (isSelected) return "bg-orange-500 border-orange-400"
-
-    switch (status) {
-      case "available":
-        return "bg-[#2A2730] border-[#3D3A46] hover:border-green-500/50"
-      case "dine-in":
-        return "bg-blue-500/20 border-blue-500/50"
-      case "reserved":
-        return "bg-red-500/20 border-red-500/50"
-      case "cleaning":
-        return "bg-yellow-500/20 border-yellow-500/50"
-      default:
-        return "bg-[#2A2730] border-[#3D3A46]"
-    }
-  }
-
-  const getTableShape = (shape: Table["shape"], seats: number) => {
-    switch (shape) {
-      case "round":
-        return "rounded-full"
-      case "rectangle":
-        return seats > 4 ? "rounded-2xl w-24 h-16" : "rounded-2xl w-20 h-12"
-      case "square":
-        return "rounded-2xl w-16 h-16"
-      default:
-        return "rounded-2xl w-16 h-16"
-    }
-  }
-
   return (
-    <div className="grid grid-cols-5 gap-8 p-8 bg-[#1A1A1A] rounded-3xl border border-[#3D3A46] min-h-[500px]">
-      {tables.map((table) => {
-        const isSelected = selectedTable === table.id
-        const isClickable = table.status === "available"
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <AnimatePresence>
+        {tables.map((table, index) => {
+          const normalizedStatus = normalizeStatus(table.status)
+          const config = statusConfig[normalizedStatus]
+          const Icon = config.icon
+          const isSelected = selectedTable === table.id
+          const isClickable = normalizedStatus === "available"
 
-        return (
-          <div
-            key={table.id}
-            className="flex items-center justify-center"
-            style={{
-              gridColumn: table.position.x,
-              gridRow: table.position.y,
-            }}
-          >
-            <button
-              onClick={() => isClickable && onTableSelect(table.id)}
-              disabled={!isClickable}
-              className={cn(
-                "flex items-center justify-center border-2 transition-all duration-200 relative",
-                getTableShape(table.shape, table.seats),
-                getTableStatusColor(table.status, isSelected),
-                isClickable ? "cursor-pointer hover:scale-105" : "cursor-not-allowed opacity-75",
-              )}
+          return (
+            <motion.div
+              key={table.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{
+                duration: 0.3,
+                delay: index * 0.05,
+                ease: "easeOut",
+              }}
+              whileHover={isClickable ? { scale: 1.05 } : {}}
+              whileTap={isClickable ? { scale: 0.95 } : {}}
+              className="animate-fade-in-up"
+              style={{ animationDelay: `${index * 50}ms` }}
             >
-              <span className="text-white font-bold text-sm">{table.number}</span>
-
-              {/* Стулья вокруг столика */}
-              {table.shape === "rectangle" && table.seats > 4 && (
-                <>
-                  {/* Стулья сверху и снизу */}
-                  <div className="absolute -top-3 left-2 right-2 flex justify-between">
-                    <div className="w-4 h-2 bg-[#3D3A46] rounded-sm"></div>
-                    <div className="w-4 h-2 bg-[#3D3A46] rounded-sm"></div>
-                    <div className="w-4 h-2 bg-[#3D3A46] rounded-sm"></div>
+              <div
+                onClick={() => isClickable && onTableSelect(table.id)}
+                className={cn(
+                  "relative p-4 rounded-2xl border-2 transition-all duration-300 glass-effect",
+                  config.color,
+                  isClickable && "cursor-pointer hover:shadow-lg",
+                  !isClickable && "cursor-not-allowed opacity-75",
+                  isSelected && "ring-2 ring-orange-500 ring-offset-2 ring-offset-[#0F0F0F] gradient-orange",
+                  isClickable && "pulse-orange",
+                )}
+              >
+                {/* Статус индикатор */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Icon className={cn("w-4 h-4", config.textColor)} />
+                    <span className={cn("text-xs font-medium", config.textColor)}>{config.label}</span>
                   </div>
-                  <div className="absolute -bottom-3 left-2 right-2 flex justify-between">
-                    <div className="w-4 h-2 bg-[#3D3A46] rounded-sm"></div>
-                    <div className="w-4 h-2 bg-[#3D3A46] rounded-sm"></div>
-                    <div className="w-4 h-2 bg-[#3D3A46] rounded-sm"></div>
-                  </div>
-                </>
-              )}
+                  {isSelected && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="w-2 h-2 bg-orange-500 rounded-full pulse-orange"
+                    />
+                  )}
+                </div>
 
-              {table.shape === "square" && (
-                <>
-                  {/* Стулья по бокам */}
-                  <div className="absolute -left-3 top-1/2 transform -translate-y-1/2 w-2 h-4 bg-[#3D3A46] rounded-sm"></div>
-                  <div className="absolute -right-3 top-1/2 transform -translate-y-1/2 w-2 h-4 bg-[#3D3A46] rounded-sm"></div>
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-4 h-2 bg-[#3D3A46] rounded-sm"></div>
-                  <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-4 h-2 bg-[#3D3A46] rounded-sm"></div>
-                </>
-              )}
-            </button>
-          </div>
-        )
-      })}
+                {/* Номер столика */}
+                <div className="text-center mb-3">
+                  <div
+                    className={cn("text-2xl font-bold mb-1", isSelected ? "text-white text-shadow-glow" : "text-white")}
+                  >
+                    #{table.id}
+                  </div>
+                  <div className="text-xs text-gray-400">Столик</div>
+                </div>
+
+                {/* Количество мест */}
+                <div className="flex items-center justify-center gap-2 text-gray-300">
+                  <Users className="w-4 h-4" />
+                  <span className="text-sm font-medium">
+                    {table.seats} {table.seats === 1 ? "место" : table.seats < 5 ? "места" : "мест"}
+                  </span>
+                </div>
+
+                {/* Анимированный фон для выбранного столика */}
+                {isSelected && (
+                  <motion.div
+                    className="absolute inset-0 gradient-orange rounded-2xl opacity-20"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.2 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+              </div>
+            </motion.div>
+          )
+        })}
+      </AnimatePresence>
     </div>
   )
 }

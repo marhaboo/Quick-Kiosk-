@@ -19,10 +19,10 @@ interface CartSidebarProps {
   onRemoveItem: (itemId: number) => void
 }
 
-type OrderType = "pickup" | "delivery" | "table"
+type OrderType = "Pickup" | "Delivery" | "AtTable"
 
 export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem }: CartSidebarProps) {
-  const [orderType, setOrderType] = useState<OrderType>("pickup")
+  const [orderType, setOrderType] = useState<OrderType>("Pickup")
   const [deliveryAddress, setDeliveryAddress] = useState("")
   const [selectedTable, setSelectedTable] = useState("")
   const [bookingDateTime, setBookingDateTime] = useState("")
@@ -31,7 +31,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const deliveryFee = orderType === "delivery" ? 10 : 0
+  const deliveryFee = orderType === "Delivery" ? 10 : 0
   const finalAmount = totalAmount + deliveryFee
   const dispatch: AppDispatch = useDispatch()
 
@@ -45,7 +45,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
       return false
     }
 
-    if (orderType === "delivery") {
+    if (orderType === "Delivery") {
       if (!deliveryAddress.trim()) {
         alert("Введите адрес доставки")
         return false
@@ -60,7 +60,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
       }
     }
 
-    if (orderType === "table") {
+    if (orderType === "AtTable") {
       if (!selectedTable) {
         alert("Выберите столик")
         return false
@@ -79,7 +79,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
       }
     }
 
-    if (orderType === "pickup") {
+    if (orderType === "Pickup") {
       if (!fullName.trim()) {
         alert("Введите полное имя")
         return false
@@ -110,10 +110,10 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
       items: orderItems,
       fullName: fullName.trim(),
       phoneNumber: phoneNumber.trim(),
-      tableId: orderType === "table" ? Number.parseInt(selectedTable) : 0,
+      tableId: orderType === "AtTable" ? Number.parseInt(selectedTable) : null,
       type: orderType,
-      deliveryAddress: orderType === "delivery" ? deliveryAddress.trim() : null,
-      bookingDateTime: orderType === "table" ? bookingDateTime : null,
+      deliveryAddress: orderType === "Delivery" ? deliveryAddress.trim() : null,
+      bookingDateTime: orderType === "AtTable" ? bookingDateTime : null,
       status: "pending", // Начальный статус заказа
       totalAmount: finalAmount,
     }
@@ -150,9 +150,9 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
           </div>
           <h3 className="text-xl font-bold text-white mb-2">Заказ принят!</h3>
           <p className="text-gray-400 mb-4">
-            {orderType === "pickup" && "Ваш заказ будет готов через 15-20 минут"}
-            {orderType === "delivery" && "Ваш заказ будет доставлен в течение 30-45 минут"}
-            {orderType === "table" && "Столик забронирован на указанное время"}
+            {orderType === "Pickup" && "Ваш заказ будет готов через 15-20 минут"}
+            {orderType === "Delivery" && "Ваш заказ будет доставлен в течение 30-45 минут"}
+            {orderType === "AtTable" && "Столик забронирован на указанное время"}
           </p>
           <Button
             onClick={() => setIsSubmitted(false)}
@@ -245,10 +245,10 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
               <div className="grid grid-cols-1 gap-2">
                 {/* Самовывоз */}
                 <button
-                  onClick={() => setOrderType("pickup")}
-                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${orderType === "pickup"
-                      ? "border-orange-500/50 bg-orange-500/10"
-                      : "border-[#3D3A46] bg-[#2A2730]/50 hover:bg-[#2A2730]/80"
+                  onClick={() => setOrderType("Pickup")}
+                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${orderType === "Pickup"
+                    ? "border-orange-500/50 bg-orange-500/10"
+                    : "border-[#3D3A46] bg-[#2A2730]/50 hover:bg-[#2A2730]/80"
                     }`}
                 >
                   <Store className="w-5 h-5 text-orange-400" />
@@ -260,10 +260,10 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
 
                 {/* Доставка */}
                 <button
-                  onClick={() => setOrderType("delivery")}
-                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${orderType === "delivery"
-                      ? "border-orange-500/50 bg-orange-500/10"
-                      : "border-[#3D3A46] bg-[#2A2730]/50 hover:bg-[#2A2730]/80"
+                  onClick={() => setOrderType("Delivery")}
+                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${orderType === "Delivery"
+                    ? "border-orange-500/50 bg-orange-500/10"
+                    : "border-[#3D3A46] bg-[#2A2730]/50 hover:bg-[#2A2730]/80"
                     }`}
                 >
                   <Truck className="w-5 h-5 text-blue-400" />
@@ -275,10 +275,10 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
 
                 {/* Столик */}
                 <button
-                  onClick={() => setOrderType("table")}
-                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${orderType === "table"
-                      ? "border-orange-500/50 bg-orange-500/10"
-                      : "border-[#3D3A46] bg-[#2A2730]/50 hover:bg-[#2A2730]/80"
+                  onClick={() => setOrderType("AtTable")}
+                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${orderType === "AtTable"
+                    ? "border-orange-500/50 bg-orange-500/10"
+                    : "border-[#3D3A46] bg-[#2A2730]/50 hover:bg-[#2A2730]/80"
                     }`}
                 >
                   <CalendarCheck className="w-5 h-5 text-green-400" />
@@ -322,7 +322,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
             </div>
 
             {/* Дополнительные поля для доставки */}
-            {orderType === "delivery" && (
+            {orderType === "Delivery" && (
               <div className="space-y-3">
                 <div>
                   <label className="block text-white text-sm font-medium mb-2">Адрес доставки: *</label>
@@ -341,7 +341,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
             )}
 
             {/* Дополнительные поля для столика */}
-            {orderType === "table" && (
+            {orderType === "AtTable" && (
               <div className="space-y-3">
                 <div>
                   <label className="block text-white text-sm font-medium mb-2">Номер столика: *</label>
@@ -380,7 +380,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                 <span className="text-gray-400">Сумма заказа:</span>
                 <span className="text-white">{totalAmount.toFixed(2)} сомони</span>
               </div>
-              {orderType === "delivery" && (
+              {orderType === "Delivery" && (
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400">Доставка:</span>
                   <span className="text-white">{deliveryFee.toFixed(2)} сомони</span>
@@ -402,9 +402,9 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                 "Отправка..."
               ) : (
                 <>
-                  {orderType === "pickup" && "Заказать самовывоз"}
-                  {orderType === "delivery" && "Заказать доставку"}
-                  {orderType === "table" && "Забронировать столик"}
+                  {orderType === "Pickup" && "Заказать самовывоз"}
+                  {orderType === "Delivery" && "Заказать доставку"}
+                  {orderType === "AtTable" && "Забронировать столик"}
                 </>
               )}
             </Button>

@@ -30,7 +30,7 @@ export function TopNavigation() {
             <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
               <UtensilsCrossed className="w-6 h-6 text-white" />
             </div>
-            <span className="text-white font-bold text-xl">FoodHub</span>
+            <span className="text-white font-bold text-xl">ResNet</span>
           </Link>
 
           {/* Кнопки справа */}
