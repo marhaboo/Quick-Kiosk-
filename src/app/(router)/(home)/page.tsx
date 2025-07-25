@@ -6,7 +6,7 @@ import { TopNavigation } from "@/widgets/home/top-navigation/top-navigation";
 
 export default function HomePage() {
   return (
-    <div className="bg-[url('/images/back.gif')] bg-cover bg-center min-h-screen relative">
+    <div className="bg-[url('/images/bg-of-site.png')] bg-cover bg-center min-h-screen relative">
       <div className="absolute inset-0 bg-black/60"></div>
 
       <div className="relative z-10">
