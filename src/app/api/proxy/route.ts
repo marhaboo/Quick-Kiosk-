@@ -1,4 +1,4 @@
-export async function GET(request: Request) {
+export async function GET() {
   const res = await fetch('http://45.153.68.77:5001/api'); 
   const data = await res.json();
 
