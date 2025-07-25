@@ -7,7 +7,7 @@ import { Button } from "@/shared/ui/button"
 import { Card } from "@/shared/ui/card"
 import { useSelector } from "react-redux"
 import type { RootState } from "@/app/store/store"
-import { ShortMenuItem } from "@/entities/home/models/types"
+import { ShortMenuItem } from "@/app/entities/home/models/types"
 
 
 interface MenuGridProps {

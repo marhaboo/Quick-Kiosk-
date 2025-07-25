@@ -1,7 +1,7 @@
-import  resByIdReducer from "@/entities/restaurantById/reducers/categorySlice";
-import homeReducer from "@/entities/home/reducers/homeSlice";
+import  resByIdReducer from "@/app/entities/restaurantById/reducers/categorySlice";
+import homeReducer from "@/app/entities/home/reducers/homeSlice";
 import { configureStore } from "@reduxjs/toolkit";
-import  reservationReducer from "@/entities/reservation/reducers/reservation-slice";
+import  reservationReducer from "@/app/entities/reservation/reducers/reservation-slice";
 
 export function makeStore() {
   return configureStore({

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getRestaurantById } from "../api/api";
-import { Restaurant } from "@/entities/home/models/types";
+import { Restaurant } from "@/app/entities/home/models/types";
 
 const initialState = {
   currentRestaurant: null as Restaurant | null,

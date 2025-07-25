@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Кастомные анимации */
+/* Ваши существующие стили */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -19,6 +19,31 @@
 
 .animation-delay-200 {
   animation-delay: 200ms;
+}
+
+/* Дополнительные анимации для логина */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
 }
 
 /* Дополнительные стили для плавности */
@@ -73,4 +98,13 @@ input:-webkit-autofill {
   box-shadow: 0 0 0px 1000px #222125 inset !important;
   -webkit-text-fill-color: white !important;
   border: 1px solid #3d3a46;
+}
+
+/* Дополнительные hover эффекты */
+.group:hover .group-hover\:rotate-12 {
+  transform: rotate(12deg);
+}
+
+.group:hover .group-hover\:text-orange-200 {
+  color: rgb(254 215 170);
 }

@@ -1,15 +1,31 @@
-import React from "react";
+"use client"
 
-type PrimaryButtonType = {
-  text: string;
-};
+interface PrimaryButtonProps {
+  text: string
+  disabled?: boolean
+  onClick?: () => void
+  type?: "button" | "submit" | "reset"
+  isLoading?: boolean
+}
 
-const PrimaryButton = ({ text }: PrimaryButtonType) => {
+const PrimaryButton = ({ text, disabled = false, onClick, type = "submit", isLoading = false }: PrimaryButtonProps) => {
   return (
-    <button type="submit" className="bg-[#2E2C33]/40 w-full backdrop-blur-2xl text-[14px] md:text-[18px] py-2 px-7 rounded-2xl text-white border border-[#2E2C33] hover:bg-[#2E2C33]/70 transition-colors duration-300 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/30 active:scale-95">
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`w-full py-2 px-4 rounded-2xl font-medium transition-all duration-200 ${
+        disabled
+          ? "bg-gray-500/50 text-gray-300 cursor-not-allowed"
+          : "gradient-orange text-white hover:from-orange-600 hover:to-orange-700 active:scale-95"
+      }`}
+    >
+      {isLoading && (
+        <div className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+      )}
       {text}
     </button>
-  );
-};
+  )
+}
 
-export default PrimaryButton;
+export default PrimaryButton

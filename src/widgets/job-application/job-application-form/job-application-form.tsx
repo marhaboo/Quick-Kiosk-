@@ -7,7 +7,7 @@ import { Card } from "@/shared/ui/card"
 import { Input } from "@/shared/ui/input"
 import Link from "next/link"
 import { useDispatch } from "react-redux"
-import { postJobApplication } from "@/entities/job-application/api/job-application-api"
+import { postJobApplication } from "@/app/entities/job-application/api/job-application-api"
 import type { AppDispatch } from "@/app/store/store"
 
 interface FormData {

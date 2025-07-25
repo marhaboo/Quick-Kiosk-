@@ -1,7 +1,7 @@
 "use client"
 
 import type { AppDispatch, RootState } from "@/app/store/store"
-import { getTables } from "@/entities/reservation/api/api-reservation"
+import { getTables } from "@/app/entities/reservation/api/api-reservation"
 import { ReservationHeader } from "@/features/reservation/reservation-header/reservation-header"
 import { TableGrid } from "@/features/reservation/table-grid/table-grid"
 import { TableStatusLegend } from "@/features/reservation/table-status-legend/table-status-legend"

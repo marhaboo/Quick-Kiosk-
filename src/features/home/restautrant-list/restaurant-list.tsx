@@ -2,10 +2,10 @@
 
 import { RestaurantCard } from "@/widgets/home/restaurant-card/restaurant-card"
 import { useDispatch, useSelector } from "react-redux"
-import type { Restaurant } from "@/entities/home/models/types"
+import type { Restaurant } from "@/app/entities/home/models/types"
 import type { AppDispatch, RootState } from "@/app/store/store"
 import { useEffect } from "react"
-import { getRestaurants } from "@/entities/home/api/home-api"
+import { getRestaurants } from "@/app/entities/home/api/home-api"
 
 function RestaurantCardSkeleton() {
   return (

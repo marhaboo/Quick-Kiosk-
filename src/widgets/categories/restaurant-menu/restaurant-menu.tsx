@@ -5,11 +5,11 @@ import { MenuHeader } from "@/widgets/categories/menu-header/menu-header"
 import MenuSidebar from "@/features/categories/menu-sidebar/menu-sidebar"
 import { CartSidebar } from "../cart-sidebar/cart-sidebar"
 import MenuGrid from "@/features/categories/menu-grid/menu-grid"
-import { getRestaurantById } from "@/entities/restaurantById/api/api"
+import { getRestaurantById } from "@/app/entities/restaurantById/api/api"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "@/app/store/store"
 import { API_BASE_URL } from "@/shared/utils/image-utils"
-import { ShortMenuItem } from "@/entities/home/models/types"
+import { ShortMenuItem } from "@/app/entities/home/models/types"
 
 
 export interface CartItem extends ShortMenuItem {

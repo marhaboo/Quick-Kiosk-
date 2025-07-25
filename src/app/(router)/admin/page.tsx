@@ -1,16 +1,29 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Sidebar from "@/widgets/admin/sidebar/sidebar"
 import StatsCards from "@/widgets/admin/stats-cards/stats-cards"
 import RestaurantTable from "@/widgets/admin/restaurant-table/restaurant-table"
 import JobTable from "@/widgets/admin/job-table/job-table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { BarChart3 } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard")
   const [isLoading] = useState(false)
+  const router = useRouter()
+  const [isAuthorized, setIsAuthorized] = useState(false)
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn")
+
+    if (isLoggedIn === "true") {
+      setIsAuthorized(true)
+    } else {
+      router.replace("/not-found")
+    }
+  }, [])
 
   const renderContent = () => {
     switch (activeTab) {
@@ -42,13 +55,12 @@ export default function AdminDashboard() {
                           <p className="text-sm text-gray-400">{restaurant.owner}</p>
                         </div>
                         <div
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            restaurant.status === "approved"
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${restaurant.status === "approved"
                               ? "bg-green-500/20 text-green-400 border border-green-500/30"
                               : restaurant.status === "rejected"
                                 ? "bg-red-500/20 text-red-400 border border-red-500/30"
                                 : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
-                          }`}
+                            }`}
                         >
                           {restaurant.status === "approved"
                             ? "Одобрено"
