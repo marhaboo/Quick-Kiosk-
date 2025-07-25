@@ -24,6 +24,9 @@ export default function AdminDashboard() {
       router.replace("/not-found")
     }
   }, [])
+  if (!isAuthorized) {
+  return null // или <div>Загрузка...</div>
+}
 
   const renderContent = () => {
     switch (activeTab) {

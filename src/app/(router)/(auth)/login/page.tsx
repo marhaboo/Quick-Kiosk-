@@ -2,7 +2,7 @@
 
 import type { AppDispatch } from "@/app/store/store"
 import type React from "react"
-import Cookies from "js-cookie"
+
 
 import { loginPost } from "@/app/entities/auth/api/api"
 import PrimaryButton from "@/shared/primary-button/primary-button"
