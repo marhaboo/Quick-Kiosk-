@@ -95,7 +95,7 @@ export default function AdminDashboard() {
         )
 
       case "restaurants":
-        return <RestaurantTable isLoading={isLoading} />
+        return <RestaurantTable />
 
       case "jobs":
         return <JobTable isLoading={isLoading} />

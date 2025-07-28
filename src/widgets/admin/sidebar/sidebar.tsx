@@ -21,7 +21,7 @@ const menuItems = [
 
 function SidebarSkeleton() {
   return (
-    <div className="w-64 bg-[#1a1a1a] border-r border-[#333333] animate-pulse">
+    <div className="w-64 bg-[#1a1a1a] max-h-screen border-r border-[#333333] animate-pulse">
       <div className="p-6">
         <div className="h-8 bg-gray-700 rounded mb-2" />
         <div className="h-4 bg-gray-700 rounded w-3/4" />
@@ -56,8 +56,7 @@ export default function Sidebar({ activeTab, onTabChange }: SidebarProps) {
         <div className="flex items-center justify-between">
           {!isCollapsed && (
             <div className="animate-fade-in-up">
-              <h1 className="text-2xl font-bold text-white text-shadow-glow">Админ Панель</h1>
-              <p className="text-gray-400">Управление рестораном</p>
+              <h1 className="text-xl font-bold text-white text-shadow-glow">Админ — панель</h1>
             </div>
           )}
           <Button
