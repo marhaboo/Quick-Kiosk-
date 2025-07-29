@@ -5,7 +5,7 @@ export interface User {
   imageUrl?: string;
   phoneNumber?: string;
   role: string
-  password?: string;
+  password: string;
 }
 
 export interface UserGet extends User {

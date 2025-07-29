@@ -12,7 +12,7 @@ interface AddUserModalProps {
 }
 
 const AddUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<User>({
     username: "",
     fullName: "",
     email: "",
