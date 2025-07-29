@@ -4,10 +4,11 @@ import PrimaryButton from "@/shared/primary-button/primary-button";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
 import { postUser } from "@/entities/auth/api/api";
+import { User } from "@/entities/user/models/types";
 
 interface AddUserModalProps {
   onClose: () => void;
-  onSubmit?: (data: any) => void;
+  onSubmit?: (data: User) => void;
 }
 
 const AddUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
@@ -47,7 +48,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
     try {
       await dispatch(postUser(form)).unwrap();
       onClose();
-    } catch (err) {
+    } catch {
       setErrors({ submit: "Ошибка при добавлении пользователя" });
     }
   };

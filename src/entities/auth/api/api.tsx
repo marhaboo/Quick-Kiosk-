@@ -74,8 +74,14 @@ export const postUser = createAsyncThunk<UserGet, User>(
       dispatch(getUsers());
 
       return data.data;
-    } catch (error: any) {
-      return rejectWithValue(error?.response?.data?.message || "Не удалось создать пользователя");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(
+          error.response?.data?.message || "Не удалось создать пользователя"
+        );
+      }
+
+      return rejectWithValue("Произошла неожиданная ошибка");
     }
   }
 );

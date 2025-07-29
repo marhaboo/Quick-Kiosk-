@@ -30,7 +30,7 @@ export default function AdminDashboard() {
     const dispatch:AppDispatch = useDispatch()
     useEffect(() => {
       dispatch(getUsers(userName))
-    }, [dispatch]) 
+    }, [dispatch,userName]) 
   
     const user = useSelector((state: RootState) => state.users.users)
   
@@ -49,7 +49,7 @@ export default function AdminDashboard() {
     } else {
       router.replace("/not-found")
     }
-  }, [])
+  }, [router])
   if (!isAuthorized) {
     return null 
   }

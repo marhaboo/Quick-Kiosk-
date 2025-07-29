@@ -14,19 +14,19 @@ export const resRequestSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getResRequest.fulfilled, (state, action) => {
-      state.requests = action.payload
-      state.loading = false
-      state.error = null
-    }),
-      builder.addCase(getResRequest.pending, (state) => {
-        state.loading = true
-        state.error = null
-      }),
-      builder.addCase(getResRequest.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.error.message || "Ошибка при загрузке запросов"
-      })
-  }
+      state.requests = action.payload;
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(getResRequest.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getResRequest.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || "Ошибка при загрузке запросов";
+    });
+  },
 })
 
 export default resRequestSlice.reducer

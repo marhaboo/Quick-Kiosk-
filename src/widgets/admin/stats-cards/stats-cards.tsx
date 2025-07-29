@@ -1,16 +1,15 @@
 "use client"
 
-import {  RootState } from "@/app/store/store"
+import { RootState } from "@/app/store/store"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { Store, Briefcase, Users } from "lucide-react"
-import {  useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 
 interface StatsCardsProps {
   isLoading?: boolean
 }
 
 function StatCardSkeleton() {
-
   return (
     <Card className="border border-[#333333] bg-[#1a1a1a] animate-pulse">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -26,6 +25,8 @@ function StatCardSkeleton() {
 }
 
 export default function StatsCards({ isLoading }: StatsCardsProps) {
+  const { data } = useSelector((state: RootState) => state.home)
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -35,22 +36,22 @@ export default function StatsCards({ isLoading }: StatsCardsProps) {
       </div>
     )
   }
-const now = new Date();
-const currentMonth = now.getMonth();
-const currentYear = now.getFullYear();
 
-  const {data} = useSelector((state: RootState) => state.home)
-  
-   const resLength = data.length
-const thisMonthRes = data.filter(item => {
-  const created = new Date(item.createdAt);
-  return created.getMonth() === currentMonth && created.getFullYear() === currentYear;
-}).length;
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  const resLength = data.length
+  const thisMonthRes = data.filter(item => {
+    const created = new Date(item.createdAt);
+    return created.getMonth() === currentMonth && created.getFullYear() === currentYear;
+  }).length;
+
   const stats = [
     {
       title: "Всего ресторанов",
       value: resLength,
-      change: thisMonthRes,
+      change: thisMonthRes > 0 ? `+${thisMonthRes} за этот месяц` : "Нет новых за месяц",
       icon: Store,
       color: "text-blue-400",
     },
@@ -96,5 +97,4 @@ const thisMonthRes = data.filter(item => {
         )
       })}
     </div>
-  )
-}
+  ) }

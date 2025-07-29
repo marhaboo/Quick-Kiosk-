@@ -7,6 +7,8 @@ import { Button } from "@/shared/ui/button"
 import { Badge } from "@/shared/ui/badge"
 import { User as UserIcon, Trash2, ShieldCheck, Shield, Plus } from "lucide-react"
 import AddUserModal from "../add-user-modal/add-user-modal"
+import { User } from "@/entities/user/models/types"
+import Image from "next/image"
 
 const roleColors: Record<string, string> = {
   Admin: "bg-orange-500/20 text-orange-400 border border-orange-500/30",
@@ -33,11 +35,10 @@ const UserTable = () => {
     dispatch(updateUserRole({ id, role: newRole }))
   }
 
-  // You can implement your registration logic here
-  const handleAddUser = (data: any) => {
-    // TODO: call your registration API here
+  // Registration logic with correct type
+  const handleAddUser = (user: User) => {
+    // Optionally, you can dispatch(getUsers()) after successful registration in the modal
     setShowModal(false)
-    // Optionally, dispatch(getUsers())
   }
 
   if (loading) {
@@ -93,7 +94,7 @@ const UserTable = () => {
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 rounded-full bg-gray-700/50 border border-gray-600/30 flex items-center justify-center overflow-hidden">
                     {user.imageUrl ? (
-                      <img
+                      <Image
                         src={user.imageUrl}
                         alt={user.fullName}
                         className="w-12 h-12 object-cover rounded-full"
@@ -106,7 +107,7 @@ const UserTable = () => {
                     <h3 className="text-white font-semibold text-lg">{user.fullName}</h3>
                     <p className="text-gray-400 text-sm">{user.email}</p>
                     <p className="text-gray-500 text-xs">{user.phoneNumber}</p>
-                    <p className="text-gray-500 text-xs">{user.createdAt.slice(0, 10)}</p>
+                    <p className="text-gray-500 text-xs">{user.createdAt?.slice(0, 10)}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
