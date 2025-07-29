@@ -1,13 +1,16 @@
 "use client"
 
+import {  RootState } from "@/app/store/store"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
-import { Store, Briefcase, TableIcon, Users } from "lucide-react"
+import { Store, Briefcase, Users } from "lucide-react"
+import {  useSelector } from "react-redux"
 
 interface StatsCardsProps {
   isLoading?: boolean
 }
 
 function StatCardSkeleton() {
+
   return (
     <Card className="border border-[#333333] bg-[#1a1a1a] animate-pulse">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -32,12 +35,22 @@ export default function StatsCards({ isLoading }: StatsCardsProps) {
       </div>
     )
   }
+const now = new Date();
+const currentMonth = now.getMonth();
+const currentYear = now.getFullYear();
 
+  const {data} = useSelector((state: RootState) => state.home)
+  
+   const resLength = data.length
+const thisMonthRes = data.filter(item => {
+  const created = new Date(item.createdAt);
+  return created.getMonth() === currentMonth && created.getFullYear() === currentYear;
+}).length;
   const stats = [
     {
       title: "Всего ресторанов",
-      value: "24",
-      change: "+2 за этот месяц",
+      value: resLength,
+      change: thisMonthRes,
       icon: Store,
       color: "text-blue-400",
     },
@@ -49,14 +62,7 @@ export default function StatsCards({ isLoading }: StatsCardsProps) {
       color: "text-green-400",
     },
     {
-      title: "Активные столики",
-      value: "89",
-      change: "73% заполненность",
-      icon: TableIcon,
-      color: "text-orange-400",
-    },
-    {
-      title: "Пользователи",
+      title: "Zakaz",
       value: "342",
       change: "+18 за месяц",
       icon: Users,

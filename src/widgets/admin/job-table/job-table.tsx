@@ -1,19 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect } from "react"
 import { Card, CardContent } from "@/shared/ui/card"
 import { Button } from "@/shared/ui/button"
 import { Badge } from "@/shared/ui/badge"
 import { CheckCircle, XCircle, User } from "lucide-react"
-
-interface JobApplication {
-  id: number
-  name: string
-  position: string
-  restaurant: string
-  status: string
-  experience: string
-}
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "@/app/store/store"
+import { getJobApplication, updateJobApplicationStatus, delJobApplication } from "@/entities/job-application/api/job-application-api"
 
 interface JobTableProps {
   isLoading?: boolean
@@ -50,40 +44,24 @@ function JobTableSkeleton() {
 }
 
 export default function JobTable({ isLoading }: JobTableProps) {
-  const [jobApplications, setJobApplications] = useState<JobApplication[]>([
-    {
-      id: 1,
-      name: "Елена Волкова",
-      position: "Официант",
-      restaurant: "Bella Vista",
-      status: "pending",
-      experience: "2 года",
-    },
-    {
-      id: 2,
-      name: "Дмитрий Орлов",
-      position: "Повар",
-      restaurant: "Sushi Master",
-      status: "approved",
-      experience: "5 лет",
-    },
-    {
-      id: 3,
-      name: "Ольга Зайцева",
-      position: "Бармен",
-      restaurant: "Pizza Corner",
-      status: "pending",
-      experience: "3 года",
-    },
-  ])
+  const dispatch: AppDispatch = useDispatch()
+  const { jobs, loading } = useSelector((state: RootState) => state.jobApplication)
 
-  const updateJobStatus = (id: number, status: string) => {
-    setJobApplications(jobApplications.map((j) => (j.id === id ? { ...j, status } : j)))
+  useEffect(() => {
+    dispatch(getJobApplication())
+  }, [dispatch])
+
+  const handleStatusUpdate = (id: number, status: "Accepted" | "Rejected") => {
+    dispatch(updateJobApplicationStatus({ id, status }))
+  }
+
+  const handleDelete = (id: number) => {
+    dispatch(delJobApplication(id))
   }
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "approved":
+    switch (status.toLowerCase()) {
+      case "accepted":
         return (
           <Badge className="bg-green-500/20 text-green-400 border border-green-500/30 transition-all duration-300">
             Одобрено
@@ -102,15 +80,16 @@ export default function JobTable({ isLoading }: JobTableProps) {
           </Badge>
         )
       default:
+        // Capitalize the first letter of the status
         return (
           <Badge className="bg-gray-500/20 text-gray-400 border border-gray-500/30 transition-all duration-300">
-            {status}
+            {status.charAt(0).toUpperCase() + status.slice(1)}
           </Badge>
         )
     }
   }
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <JobTableSkeleton />
   }
 
@@ -123,7 +102,7 @@ export default function JobTable({ isLoading }: JobTableProps) {
       <Card className="border border-[#333333] bg-[#1a1a1a] overflow-hidden glass-effect transition-all duration-300">
         <CardContent className="p-0">
           <div className="divide-y divide-[#333333]">
-            {jobApplications.map((application) => (
+            {jobs.map((application) => (
               <div
                 key={application.id}
                 className="p-6 hover:bg-gray-800/30 transition-all duration-300 animate-fade-in-up"
@@ -135,11 +114,13 @@ export default function JobTable({ isLoading }: JobTableProps) {
                       <User className="h-6 w-6 text-gray-400" />
                     </div>
                     <div>
-                      <h3 className="text-white font-semibold text-lg">{application.name}</h3>
-                      <p className="text-gray-400">
-                        {application.position} • {application.restaurant}
+                      <h3 className="text-white font-semibold text-lg">
+                        {application.firstName} {application.lastName}
+                      </h3>
+                      <p className="text-gray-400">{application.desiredPosition}</p>
+                      <p className="text-gray-500 text-sm">
+                        {application.createdAt.slice(0, 10)}
                       </p>
-                      <p className="text-gray-500 text-sm">Опыт: {application.experience}</p>
                     </div>
                   </div>
 
@@ -148,15 +129,23 @@ export default function JobTable({ isLoading }: JobTableProps) {
                     <div className="flex space-x-2">
                       <Button
                         size="sm"
-                        onClick={() => updateJobStatus(application.id, "approved")}
+                        onClick={() => handleStatusUpdate(application.id, "Accepted")}
                         className="w-10 h-10 rounded-full bg-green-500/20 border border-green-500/30 text-green-400 hover:text-green-300 hover:bg-green-500/30 transition-all duration-300 hover:scale-110"
                       >
                         <CheckCircle className="h-4 w-4" />
                       </Button>
                       <Button
                         size="sm"
-                        onClick={() => updateJobStatus(application.id, "rejected")}
+                        onClick={() => handleStatusUpdate(application.id, "Rejected")}
                         className="w-10 h-10 rounded-full bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 hover:bg-red-500/30 transition-all duration-300 hover:scale-110"
+                      >
+                        <XCircle className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => handleDelete(application.id)}
+                        className="w-10 h-10 rounded-full bg-gray-500/20 border border-gray-500/30 text-gray-400 hover:text-gray-300 hover:bg-gray-500/30 transition-all duration-200"
+                        title="Удалить заявку"
                       >
                         <XCircle className="h-4 w-4" />
                       </Button>

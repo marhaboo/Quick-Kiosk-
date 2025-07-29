@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { BarChart3, Users, Store, Briefcase, TableIcon, MenuIcon, ChevronLeft, ChevronRight } from "lucide-react"
+import { BarChart3, Users, Store, Briefcase, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { cn } from "@/shared/lib/utils"
 
@@ -14,8 +14,6 @@ const menuItems = [
   { id: "dashboard", label: "Дашборд", icon: BarChart3 },
   { id: "restaurants", label: "Запросы ресторанов", icon: Store },
   { id: "jobs", label: "Заявки на работу", icon: Briefcase },
-  { id: "tables", label: "Управление столиками", icon: TableIcon },
-  { id: "menu", label: "Управление меню", icon: MenuIcon },
   { id: "users", label: "Управление пользователями", icon: Users },
 ]
 
@@ -45,15 +43,17 @@ export default function Sidebar({ activeTab, onTabChange }: SidebarProps) {
     return <SidebarSkeleton />
   }
 
+
+
   return (
     <div
       className={cn(
-        "bg-[#1a1a1a] border-r border-[#333333] transition-all duration-300 ease-in-out",
+        "bg-[#1a1a1a] h-screen  border-r border-[#333333] transition-all duration-300 ease-in-out",
         isCollapsed ? "w-16" : "w-64",
       )}
     >
       <div className="p-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between"> 
           {!isCollapsed && (
             <div className="animate-fade-in-up">
               <h1 className="text-xl font-bold text-white text-shadow-glow">Админ — панель</h1>

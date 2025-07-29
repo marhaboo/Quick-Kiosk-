@@ -1,19 +1,20 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
+import React, { useState } from "react"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import Link from "next/link"
 import { BasicInfoStep } from "@/features/add-restaurant/basic-info-step/basic-info-step"
 import { ProgressSteps } from "@/features/add-restaurant/progress-steps/progress-steps"
 import { WorkingHoursStep } from "@/features/add-restaurant/working-hours-step/working-hours-step"
-import { MediaStep } from "@/features/add-restaurant/media-step/media-step"
 import { OwnerContactsStep } from "@/features/add-restaurant/owner-contacts/owner-contacts"
 import { SuccessPage } from "@/features/add-restaurant/success-page/success-page"
 import { RestaurantFormData } from "@/shared/types/restaurant-form"
-
+import { useDispatch } from "react-redux"
+import { AppDispatch } from "@/app/store/store"
+import { postResRequest } from "@/entities/res-request/api/api"
+import { PostRestaurant, WorkingHour } from "@/entities/res-request/models/types"
+import { AnimatePresence, motion } from "framer-motion"
 
 const initialFormData: RestaurantFormData = {
   name: "",
@@ -28,7 +29,7 @@ const initialFormData: RestaurantFormData = {
   openingHours: {
     monday: { open: "09:00", close: "22:00", closed: false },
     tuesday: { open: "09:00", close: "22:00", closed: false },
-    wednesday: { open: "09:00", close: "22:00", closed:  false},
+    wednesday: { open: "09:00", close: "22:00", closed: false },
     thursday: { open: "09:00", close: "22:00", closed: false },
     friday: { open: "09:00", close: "22:00", closed: false },
     saturday: { open: "09:00", close: "22:00", closed: false },
@@ -41,34 +42,78 @@ const initialFormData: RestaurantFormData = {
   ownerEmail: "",
 }
 
+const stepVariants = {
+  initial: { opacity: 0, x: 100 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -100 },
+}
+
 export function AddRestaurantForm() {
   const [formData, setFormData] = useState<RestaurantFormData>(initialFormData)
   const [currentStep, setCurrentStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
+  const dispatch: AppDispatch = useDispatch()
+
+  const transformToPostRestaurant = (data: RestaurantFormData): PostRestaurant => {
+    const days: Record<string, string> = {
+      monday: "Monday",
+      tuesday: "Tuesday",
+      wednesday: "Wednesday",
+      thursday: "Thursday",
+      friday: "Friday",
+      saturday: "Saturday",
+      sunday: "Sunday",
+    }
+
+    const workingHours: WorkingHour[] = Object.entries(data.openingHours).map(
+      ([key, value]) => ({
+        dayOfWeek: days[key],
+        isEnabled: !value.closed,
+        from: value.closed ? "00:00:00" : `${value.open}:00`,
+        to: value.closed ? "00:00:00" : `${value.close}:00`,
+      })
+    )
+
+    return {
+      Name: data.name,
+      Description: data.description,
+      Address: data.address,
+      Phone: data.phone,
+      Cuisine: data.cuisine,
+      OwnerFullName: data.ownerName,
+      OwnerEmail: data.ownerEmail,
+      OwnerPhone: data.ownerPhone,
+      CreatedAt: new Date().toISOString(),
+      WorkingHours: workingHours,
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Имитация отправки формы
-    await new Promise((resolve) => setTimeout(resolve, 3000))
+    const payload = transformToPostRestaurant(formData)
 
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    try {
+      await dispatch(postResRequest(payload)).unwrap()
+      setIsSubmitted(true)
+    } catch (err) { 
+      console.error("Ошибка отправки:", err)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 4))
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3))
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1))
 
-  if (isSubmitted) {
-    return <SuccessPage />
-  }
+  if (isSubmitted) return <SuccessPage />
 
   return (
     <div className="min-h-screen bg-[#0F0F0F] p-6">
       <div className="max-w-4xl mx-auto">
-        {/* Заголовок */}
         <div className="flex items-center gap-4 mb-8">
           <Link href="/">
             <Button
@@ -85,20 +130,50 @@ export function AddRestaurantForm() {
           </div>
         </div>
 
-        {/* Прогресс */}
         <ProgressSteps currentStep={currentStep} />
 
         <form onSubmit={handleSubmit}>
-          {/* Шаги формы */}
-          {currentStep === 1 && <BasicInfoStep formData={formData} setFormData={setFormData} />}
+          <AnimatePresence mode="wait" initial={false}>
+            {currentStep === 1 && (
+              <motion.div
+                key="step1"
+                variants={stepVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.4 }}
+              >
+                <BasicInfoStep formData={formData} setFormData={setFormData} />
+              </motion.div>
+            )}
 
-          {currentStep === 2 && <WorkingHoursStep formData={formData} setFormData={setFormData} />}
+            {currentStep === 2 && (
+              <motion.div
+                key="step2"
+                variants={stepVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.4 }}
+              >
+                <WorkingHoursStep formData={formData} setFormData={setFormData} />
+              </motion.div>
+            )}
 
-          {currentStep === 3 && <MediaStep formData={formData} setFormData={setFormData} />}
+            {currentStep === 3 && (
+              <motion.div
+                key="step3"
+                variants={stepVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.4 }}
+              >
+                <OwnerContactsStep formData={formData} setFormData={setFormData} />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          {currentStep === 4 && <OwnerContactsStep formData={formData} setFormData={setFormData} />}
-
-          {/* Навигация */}
           <div className="flex justify-between items-center mt-8">
             {currentStep > 1 ? (
               <Button
@@ -113,7 +188,7 @@ export function AddRestaurantForm() {
               <div />
             )}
 
-            {currentStep < 4 ? (
+            {currentStep < 3 ? (
               <Button
                 type="button"
                 onClick={nextStep}

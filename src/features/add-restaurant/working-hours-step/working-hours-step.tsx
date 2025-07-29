@@ -13,8 +13,10 @@ interface WorkingHoursStepProps {
 }
 
 export function WorkingHoursStep({ formData, setFormData }: WorkingHoursStepProps) {
+  type DayKey = keyof RestaurantFormData["openingHours"]
+
   const handleHoursChange = (
-    day: keyof RestaurantFormData["openingHours"],
+    day: DayKey,
     field: "open" | "close" | "closed",
     value: string | boolean,
   ) => {
@@ -30,7 +32,7 @@ export function WorkingHoursStep({ formData, setFormData }: WorkingHoursStepProp
     }))
   }
 
-  const dayNames = {
+  const dayNames: Record<DayKey, string> = {
     monday: "Понедельник",
     tuesday: "Вторник",
     wednesday: "Среда",
@@ -50,47 +52,45 @@ export function WorkingHoursStep({ formData, setFormData }: WorkingHoursStepProp
       </div>
 
       <div className="space-y-4">
-        {Object.entries(formData.openingHours).map(([day, hours]) => (
-          <div key={day} className="flex items-center gap-4 p-4 bg-[#2A2730] rounded-xl">
-            <div className="w-24">
-              <span className="text-white font-medium">{dayNames[day as keyof typeof dayNames]}</span>
-            </div>
+        {(Object.keys(formData.openingHours) as DayKey[]).map((day) => {
+          const hours = formData.openingHours[day]
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={hours.closed}
-                onChange={(e) =>
-                  handleHoursChange(day as keyof RestaurantFormData["openingHours"], "closed", e.target.checked)
-                }
-                className="w-4 h-4 text-orange-500 bg-[#1A1A1A] border-[#3D3A46] rounded"
-              />
-              <span className="text-gray-400 text-sm">Выходной</span>
-            </div>
-
-            {!hours.closed && (
-              <div className="flex items-center gap-2">
-                <Input
-                  type="time"
-                  value={hours.open}
-                  onChange={(e) =>
-                    handleHoursChange(day as keyof RestaurantFormData["openingHours"], "open", e.target.value)
-                  }
-                  className="bg-[#1A1A1A] border-[#3D3A46] text-white w-32"
-                />
-                <span className="text-gray-400">—</span>
-                <Input
-                  type="time"
-                  value={hours.close}
-                  onChange={(e) =>
-                    handleHoursChange(day as keyof RestaurantFormData["openingHours"], "close", e.target.value)
-                  }
-                  className="bg-[#1A1A1A] border-[#3D3A46] text-white w-32"
-                />
+          return (
+            <div key={day} className="flex items-center gap-4 p-4 bg-[#2A2730] rounded-xl">
+              <div className="w-24">
+                <span className="text-white font-medium">{dayNames[day]}</span>
               </div>
-            )}
-          </div>
-        ))}
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={hours.closed}
+                  onChange={(e) => handleHoursChange(day, "closed", e.target.checked)}
+                  className="w-4 h-4 text-orange-500 bg-[#1A1A1A] border-[#3D3A46] rounded"
+                />
+                <span className="text-gray-400 text-sm">Выходной</span>
+              </div>
+
+              {!hours.closed && (
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="time"
+                    value={hours.open}
+                    onChange={(e) => handleHoursChange(day, "open", e.target.value)}
+                    className="bg-[#1A1A1A] border-[#3D3A46] text-white w-32"
+                  />
+                  <span className="text-gray-400">—</span>
+                  <Input
+                    type="time"
+                    value={hours.close}
+                    onChange={(e) => handleHoursChange(day, "close", e.target.value)}
+                    className="bg-[#1A1A1A] border-[#3D3A46] text-white w-32"
+                  />
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
     </Card>
   )

@@ -8,12 +8,38 @@ import JobTable from "@/widgets/admin/job-table/job-table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { BarChart3 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import UserTable from "@/features/admin/user-table/user-table"
+import { AppDispatch, RootState } from "@/app/store/store"
+import { useDispatch, useSelector } from "react-redux"
+import { getUsers } from "@/entities/user/api/api"
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard")
   const [isLoading] = useState(false)
   const router = useRouter()
   const [isAuthorized, setIsAuthorized] = useState(false)
+
+    const userDataString = localStorage.getItem("user")
+    let userName: string | null = null
+    
+    if(userDataString){
+      const userData = JSON.parse(userDataString)
+      userName = userData.userName || null
+    }
+  
+    const dispatch:AppDispatch = useDispatch()
+    useEffect(() => {
+      dispatch(getUsers(userName))
+    }, [dispatch]) 
+  
+    const user = useSelector((state: RootState) => state.users.users)
+  
+    if(user) {
+      user.filter((item) => item.role === "Admin") 
+    }
+    else{
+  
+    }
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn")
@@ -25,8 +51,8 @@ export default function AdminDashboard() {
     }
   }, [])
   if (!isAuthorized) {
-  return null // или <div>Загрузка...</div>
-}
+    return null 
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -59,10 +85,10 @@ export default function AdminDashboard() {
                         </div>
                         <div
                           className={`px-2 py-1 rounded-full text-xs font-medium ${restaurant.status === "approved"
-                              ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                              : restaurant.status === "rejected"
-                                ? "bg-red-500/20 text-red-400 border border-red-500/30"
-                                : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
+                            ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                            : restaurant.status === "rejected"
+                              ? "bg-red-500/20 text-red-400 border border-red-500/30"
+                              : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
                             }`}
                         >
                           {restaurant.status === "approved"
@@ -100,46 +126,9 @@ export default function AdminDashboard() {
       case "jobs":
         return <JobTable isLoading={isLoading} />
 
-      case "tables":
-        return (
-          <div className="animate-fade-in-up">
-            <h2 className="text-3xl font-bold text-white mb-8 text-shadow-glow">Управление столиками</h2>
-            <Card className="border border-[#333333] bg-[#1a1a1a] glass-effect animate-fade-in-up">
-              <CardContent className="p-8">
-                <div className="text-center text-gray-400">
-                  <p>Функционал управления столиками в разработке</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )
-
-      case "menu":
-        return (
-          <div className="animate-fade-in-up">
-            <h2 className="text-3xl font-bold text-white mb-8 text-shadow-glow">Управление меню</h2>
-            <Card className="border border-[#333333] bg-[#1a1a1a] glass-effect animate-fade-in-up">
-              <CardContent className="p-8">
-                <div className="text-center text-gray-400">
-                  <p>Функционал управления меню в разработке</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )
-
       case "users":
         return (
-          <div className="animate-fade-in-up">
-            <h2 className="text-3xl font-bold text-white mb-8 text-shadow-glow">Управление пользователями</h2>
-            <Card className="border border-[#333333] bg-[#1a1a1a] glass-effect animate-fade-in-up">
-              <CardContent className="p-8">
-                <div className="text-center text-gray-400">
-                  <p>Функционал управления пользователями в разработке</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <UserTable/>
         )
 
       default:

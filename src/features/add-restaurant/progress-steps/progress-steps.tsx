@@ -6,7 +6,7 @@ export function ProgressSteps({ currentStep }: ProgressStepsProps) {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        {[1, 2, 3, 4].map((step) => (
+        {[1, 2, 3].map((step) => (
           <div key={step} className="flex items-center">
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
@@ -22,7 +22,6 @@ export function ProgressSteps({ currentStep }: ProgressStepsProps) {
       <div className="flex justify-between text-sm text-gray-400">
         <span>Основная информация</span>
         <span>Время работы</span>
-        <span>Фото и меню</span>
         <span>Контакты владельца</span>
       </div>
     </div>

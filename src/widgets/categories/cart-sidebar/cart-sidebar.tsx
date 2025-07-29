@@ -8,8 +8,8 @@ import { Card } from "@/shared/ui/card"
 import { Input } from "@/shared/ui/input"
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "@/app/store/store"
-import { postOrder } from "@/app/entities/cart-order/api/api-order"
-import { OrderItem, OrderItems } from "@/app/entities/cart-order/models/type"
+import { postOrder } from "@/entities/cart-order/api/api-order"
+import { OrderItem, OrderItems } from "@/entities/cart-order/models/type"
 import { CartItem } from "../restaurant-menu/restaurant-menu"
 
 interface CartSidebarProps {

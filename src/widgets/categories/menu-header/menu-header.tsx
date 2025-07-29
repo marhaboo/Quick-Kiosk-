@@ -4,7 +4,7 @@ import { Search, User2, CalendarCheck, Home, Bell, Settings, ChevronDown, MapPin
 import { Input } from "@/shared/ui/input"
 import { Button } from "@/shared/ui/button"
 import Link from "next/link"
-import { Restaurant } from "@/app/entities/home/models/types"
+import { Restaurant } from "@/entities/home/models/types"
 
 interface MenuHeaderProps {
   searchQuery: string

@@ -2,7 +2,7 @@
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/app/store/store";
-import { putResRequest, delResRequest, getResRequest } from "@/app/entities/res-request/api/api";
+import { putResRequest, delResRequest, getResRequest } from "@/entities/res-request/api/api";
 import { CheckCircle, XCircle } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { useEffect } from "react";

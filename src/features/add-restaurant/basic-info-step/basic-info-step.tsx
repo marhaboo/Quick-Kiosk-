@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { Store, MapPin, Phone, Mail, Users } from "lucide-react"
+import { Store, MapPin, Phone } from "lucide-react"
 import { Card } from "@/shared/ui/card"
 import { Input } from "@/shared/ui/input"
 import type { RestaurantFormData } from "@/shared/types/restaurant-form"
@@ -18,37 +17,39 @@ export function BasicInfoStep({ formData, setFormData }: BasicInfoStepProps) {
   }
 
   return (
-    <Card className="bg-[#1A1A1A] border border-[#333333] rounded-3xl p-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 bg-orange-500/20 rounded-xl flex items-center justify-center">
-          <Store className="w-5 h-5 text-orange-400" />
+    <Card className="bg-[#1A1A1A] border border-[#444444] rounded-3xl p-8 shadow-lg">
+      <div className="flex items-center gap-4 mb-10">
+        <div className="w-12 h-12 bg-orange-500/25 rounded-2xl flex items-center justify-center transition-colors duration-300 hover:bg-orange-500/40">
+          <Store className="w-6 h-6 text-orange-400" />
         </div>
-        <h2 className="text-xl font-bold text-white">Основная информация</h2>
+        <h2 className="text-2xl font-extrabold text-white tracking-wide">Основная информация</h2>
       </div>
 
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
           <div>
-            <label className="block text-gray-300 text-sm font-medium mb-2">Название ресторана *</label>
+            <label className="block text-gray-400 text-sm font-semibold mb-3 tracking-wide">Название ресторана <span className="text-orange-500">*</span></label>
             <Input
               type="text"
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
-              className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl"
+              className="bg-[#2A2730] border border-[#555555] text-white placeholder:text-gray-500 rounded-2xl px-5 py-3 focus:border-orange-500 focus:ring-2 focus:ring-orange-500 transition"
               placeholder="Название вашего ресторана"
               required
+              spellCheck={false}
+              autoComplete="off"
             />
           </div>
 
           <div>
-            <label className="block text-gray-300 text-sm font-medium mb-2">Тип кухни *</label>
+            <label className="block text-gray-400 text-sm font-semibold mb-3 tracking-wide">Тип кухни <span className="text-orange-500">*</span></label>
             <select
               value={formData.cuisine}
               onChange={(e) => handleInputChange("cuisine", e.target.value)}
-              className="w-full bg-[#2A2730] border border-[#3D3A46] text-white rounded-xl px-4 py-3"
+              className="w-full bg-[#2A2730] border border-[#555555] text-white rounded-2xl px-5 py-3 focus:border-orange-500 focus:ring-2 focus:ring-orange-500 transition"
               required
             >
-              <option value="">Выберите тип кухни</option>
+              <option value="" disabled>Выберите тип кухни</option>
               <option value="tajik">Таджикская</option>
               <option value="uzbek">Узбекская</option>
               <option value="european">Европейская</option>
@@ -61,90 +62,48 @@ export function BasicInfoStep({ formData, setFormData }: BasicInfoStepProps) {
         </div>
 
         <div>
-          <label className="block text-gray-300 text-sm font-medium mb-2">Описание ресторана *</label>
+          <label className="block text-gray-400 text-sm font-semibold mb-3 tracking-wide">Описание ресторана <span className="text-orange-500">*</span></label>
           <textarea
             value={formData.description}
             onChange={(e) => handleInputChange("description", e.target.value)}
-            className="w-full bg-[#2A2730] border border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl px-4 py-3 resize-none"
+            className="w-full bg-[#2A2730] border border-[#555555] text-white placeholder:text-gray-500 rounded-2xl px-5 py-4 resize-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500 transition"
             placeholder="Расскажите о вашем ресторане, его особенностях и атмосфере"
-            rows={4}
+            rows={5}
             required
+            spellCheck={false}
           />
         </div>
 
         <div>
-          <label className="block text-gray-300 text-sm font-medium mb-2">Адрес *</label>
+          <label className="block text-gray-400 text-sm font-semibold mb-3 tracking-wide">Адрес <span className="text-orange-500">*</span></label>
           <div className="relative">
-            <MapPin className="absolute left-3 top-3 text-gray-400 w-4 h-4" />
+            <MapPin className="absolute left-4 top-4 text-gray-500 w-5 h-5" />
             <textarea
               value={formData.address}
               onChange={(e) => handleInputChange("address", e.target.value)}
-              className="w-full bg-[#2A2730] border border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10 pr-4 py-3 resize-none"
+              className="w-full bg-[#2A2730] border border-[#555555] text-white placeholder:text-gray-500 rounded-2xl pl-12 pr-5 py-4 resize-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500 transition"
               placeholder="Полный адрес ресторана"
-              rows={2}
+              rows={3}
               required
+              spellCheck={false}
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-          <div>
-            <label className="block text-gray-300 text-sm font-medium mb-2">Вместимость *</label>
-            <div className="relative">
-              <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                type="number"
-                value={formData.capacity}
-                onChange={(e) => handleInputChange("capacity", e.target.value)}
-                className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
-                placeholder="Количество мест"
-                required
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-gray-300 text-sm font-medium mb-2">Телефон *</label>
-            <div className="relative">
-              <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-                className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
-                placeholder="+992 XX XXX XXXX"
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-gray-300 text-sm font-medium mb-2">Email</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl pl-10"
-                placeholder="restaurant@example.com"
-              />
-            </div>
-          </div>
-        </div>
-
         <div>
-          <label className="block text-gray-300 text-sm font-medium mb-2">Веб-сайт</label>
-          <Input
-            type="url"
-            value={formData.website}
-            onChange={(e) => handleInputChange("website", e.target.value)}
-            className="bg-[#2A2730] border-[#3D3A46] text-white placeholder:text-gray-500 rounded-xl"
-            placeholder="https://your-restaurant.com"
-          />
+          <label className="block text-gray-400 text-sm font-semibold mb-3 tracking-wide">Телефон <span className="text-orange-500">*</span></label>
+          <div className="relative max-w-sm">
+            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+            <Input
+              type="tel"
+              value={formData.phone}
+              onChange={(e) => handleInputChange("phone", e.target.value)}
+              className="bg-[#2A2730] border border-[#555555] text-white placeholder:text-gray-500 rounded-2xl pl-12 py-3 focus:border-orange-500 focus:ring-2 focus:ring-orange-500 transition"
+              placeholder="+992 XX XXX XXXX"
+              required
+              spellCheck={false}
+            />
+          </div>
         </div>
       </div>
     </Card>
