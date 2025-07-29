@@ -38,7 +38,7 @@ const RequestList = () => {
 
   useEffect(() => {
     dispatch(getResRequest());
-  }, [dispatch,getResRequest]);
+  }, [dispatch]);
 
   return (
     <div className="space-y-4">

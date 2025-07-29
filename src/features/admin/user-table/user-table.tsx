@@ -36,7 +36,7 @@ const UserTable = () => {
   }
 
   // Registration logic with correct type
-  const handleAddUser = (user: User) => {
+  const handleAddUser = () => {
     // Optionally, you can dispatch(getUsers()) after successful registration in the modal
     setShowModal(false)
   }
