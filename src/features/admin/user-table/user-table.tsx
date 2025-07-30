@@ -37,7 +37,7 @@ const UserTable = () => {
     dispatch(updateUserRole({ id, role: newRole }))
   }
 
-  const handleAddUser = (user: User) => {
+  const handleAddUser = () => {
     setShowModal(false)
   }
 

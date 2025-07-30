@@ -22,6 +22,7 @@ import {
   Upload,
   Download,
 } from "lucide-react"
+import Image from "next/image"
 
 interface SettingsPageProps {
   userRole?: "super-admin" | "restaurant-owner"
@@ -84,7 +85,7 @@ export default function SettingsPage({ userRole = "super-admin" }: SettingsPageP
         <div className="relative">
           <div className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
             {userData.avatar ? (
-              <img
+              <Image
                 src={userData.avatar || "/placeholder.svg"}
                 alt="Avatar"
                 className="w-24 h-24 rounded-full object-cover"

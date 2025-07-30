@@ -112,7 +112,7 @@ export default function AdminDashboard() {
     <div className="space-y-8 animate-fade-in-up">
       <div className="flex flex-col space-y-2">
         <h1 className="text-4xl font-bold tracking-tight text-white text-shadow-glow">Super Admin Dashboard</h1>
-        <p className="text-lg text-gray-300">Welcome back! Here's what's happening with your platform today.</p>
+        <p className="text-lg text-gray-300">Welcome back! Here&apos;s what&apos;s happening with your platform today.</p>
       </div>
       <div className="animate-fade-in-up animation-delay-200">
         <StatsCards isLoading={isLoading} userRole={userRole} />
@@ -419,7 +419,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <CardTitle className="text-xl font-semibold text-white">Payment Methods</CardTitle>
-                <p className="text-sm text-gray-400 mt-1">Today's payment breakdown</p>
+                <p className="text-sm text-gray-400 mt-1">Today&apos;s payment breakdown</p>
               </div>
             </div>
           </CardHeader>
