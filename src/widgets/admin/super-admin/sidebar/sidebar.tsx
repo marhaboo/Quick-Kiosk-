@@ -29,72 +29,74 @@ interface SidebarProps {
 
 // Menu items for Super Admin
 const superAdminMenuItems = [
-  { id: "dashboard", label: "Dashboard Overview", icon: BarChart3 },
-  { id: "restaurants", label: "Restaurant Requests", icon: Store },
-  { id: "jobs", label: "Job Applications", icon: Briefcase },
-  { id: "users", label: "User Management", icon: Users },
-  { id: "settings", label: "System Settings", icon: Settings },
+  { id: "dashboard", label: "Обзор", icon: BarChart3 },
+  { id: "restaurants", label: "Рестораны", icon: Store },
+  { id: "jobs", label: "Вакансии", icon: Briefcase },
+  { id: "users", label: "Пользователи", icon: Users },
+  { id: "settings", label: "Настройки", icon: Settings },
 ]
 
 // Menu items for Restaurant Owner
 const restaurantOwnerMenuItems = [
-  { id: "dashboard", label: "Restaurant Dashboard", icon: BarChart3 },
-  { id: "menu", label: "Menu Management", icon: ChefHat },
-  { id: "tables", label: "Table Management", icon: Table },
-  { id: "orders", label: "Order Management", icon: ShoppingCart },
-  { id: "staff", label: "Staff Management", icon: Users },
-  { id: "analytics", label: "Sales Analytics", icon: FileText },
-  { id: "settings", label: "Restaurant Settings", icon: Settings },
+  { id: "dashboard", label: "Главная", icon: BarChart3 },
+  { id: "menu", label: "Меню", icon: ChefHat },
+  { id: "tables", label: "Столы", icon: Table },
+  { id: "orders", label: "Заказы", icon: ShoppingCart },
+  { id: "staff", label: "Персонал", icon: Users },
+  { id: "analytics", label: "Аналитика", icon: FileText },
+  { id: "settings", label: "Настройки", icon: Settings },
 ]
 
 // Menu items for Cashier
 const cashierMenuItems = [
-  { id: "dashboard", label: "Cashier Dashboard", icon: BarChart3 },
-  { id: "orders", label: "Order Management", icon: ShoppingCart },
-  { id: "payments", label: "Payment Processing", icon: CreditCard },
-  { id: "profile", label: "Profile Settings", icon: User },
+  { id: "dashboard", label: "Главная", icon: BarChart3 },
+  { id: "orders", label: "Заказы", icon: ShoppingCart },
+  { id: "payments", label: "Платежи", icon: CreditCard },
+  { id: "profile", label: "Профиль", icon: User },
 ]
+
 
 export default function Sidebar({ activeTab, onTabChange, userRole, userName }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   // Select menu items and config based on user role
   const getMenuConfig = () => {
-    switch (userRole) {
-      case "super-admin":
-        return {
-          menuItems: superAdminMenuItems,
-          roleTitle: "Super Admin",
-          roleSubtitle: "System Management",
-          roleIcon: Shield,
-          roleInitials: "SA",
-        }
-      case "restaurant-owner":
-        return {
-          menuItems: restaurantOwnerMenuItems,
-          roleTitle: "Restaurant Management",
-          roleSubtitle: "Owner Dashboard",
-          roleIcon: Store,
-          roleInitials: "RO",
-        }
-      case "cashier":
-        return {
-          menuItems: cashierMenuItems,
-          roleTitle: "Cashier Panel",
-          roleSubtitle: "Payment & Orders",
-          roleIcon: DollarSign,
-          roleInitials: "CA",
-        }
-      default:
-        return {
-          menuItems: [],
-          roleTitle: "Loading...",
-          roleSubtitle: "Determining role...",
-          roleIcon: BarChart3,
-          roleInitials: "...",
-        }
-    }
+  switch (userRole) {
+    case "super-admin":
+      return {
+        menuItems: superAdminMenuItems,
+        roleTitle: "Супер-админ",
+        roleSubtitle: "Полный контроль системы",
+        roleIcon: Shield,
+        roleInitials: "СА",
+      }
+    case "restaurant-owner":
+      return {
+        menuItems: restaurantOwnerMenuItems,
+        roleTitle: "Владелец ресторана",
+        roleSubtitle: "Управление рестораном",
+        roleIcon: Store,
+        roleInitials: "ВР",
+      }
+    case "cashier":
+      return {
+        menuItems: cashierMenuItems,
+        roleTitle: "Кассир",
+        roleSubtitle: "Работа с заказами и оплатами",
+        roleIcon: DollarSign,
+        roleInitials: "КА",
+      }
+    default:
+      return {
+        menuItems: [],
+        roleTitle: "Загрузка...",
+        roleSubtitle: "Определяем вашу роль",
+        roleIcon: BarChart3,
+        roleInitials: "...",
+      }
   }
+}
+
 
   const { menuItems, roleTitle, roleSubtitle, roleIcon: RoleIcon, roleInitials } = getMenuConfig()
 
@@ -174,9 +176,9 @@ export default function Sidebar({ activeTab, onTabChange, userRole, userName }: 
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">{userName}</p>
               <p className="text-xs text-gray-400 truncate">
-                {userRole === "super-admin" && "Full system access"}
-                {userRole === "restaurant-owner" && "Restaurant management"}
-                {userRole === "cashier" && "Payment & order processing"}
+                {userRole === "super-admin" && "Полный доступ к системе"}
+                {userRole === "restaurant-owner" && "Управление рестораном"}
+                {userRole === "cashier" && "Обработка платежей и заказов"}
               </p>
             </div>
           </div>

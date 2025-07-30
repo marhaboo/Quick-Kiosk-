@@ -29,18 +29,24 @@ export default function StatsCards({ isLoading, userRole }: StatsCardsProps) {
   }
 
   const getSuperAdminStats = () => [
-    { title: "Total Restaurants", value: "127", icon: Store, color: "from-blue-500 to-blue-600", change: "+12%" },
-    { title: "Active Users", value: "2,847", icon: Users, color: "from-green-500 to-green-600", change: "+18%" },
+    { title: "Всего Ресторанов", value: "127", icon: Store, color: "from-blue-500 to-blue-600", change: "+12%" },
     {
-      title: "Pending Applications",
+      title: "Активные Пользователи",
+      value: "2,847",
+      icon: Users,
+      color: "from-green-500 to-green-600",
+      change: "+18%",
+    },
+    {
+      title: "Заявки на Рассмотрении",
       value: "23",
       icon: BarChart3,
       color: "from-orange-500 to-orange-600",
       change: "+5%",
     },
     {
-      title: "Monthly Revenue",
-      value: "$47,892",
+      title: "Месячная Выручка",
+      value: "3,592,900₽",
       icon: DollarSign,
       color: "from-purple-500 to-purple-600",
       change: "+23%",
@@ -49,24 +55,30 @@ export default function StatsCards({ isLoading, userRole }: StatsCardsProps) {
 
   const getRestaurantOwnerStats = () => [
     {
-      title: "Today's Revenue",
-      value: "$2,847",
+      title: "Выручка за Сегодня",
+      value: "213,525₽",
       icon: DollarSign,
       color: "from-green-500 to-green-600",
       change: "+12%",
     },
-    { title: "Active Orders", value: "18", icon: ShoppingCart, color: "from-blue-500 to-blue-600", change: "+3" },
-    { title: "Menu Items", value: "127", icon: BarChart3, color: "from-purple-500 to-purple-600", change: "+5" },
-    { title: "Monthly Growth", value: "23%", icon: TrendingUp, color: "from-orange-500 to-orange-600", change: "+8%" },
+    { title: "Активные Заказы", value: "18", icon: ShoppingCart, color: "from-blue-500 to-blue-600", change: "+3" },
+    { title: "Позиции в Меню", value: "127", icon: BarChart3, color: "from-purple-500 to-purple-600", change: "+5" },
+    { title: "Месячный Рост", value: "23%", icon: TrendingUp, color: "from-orange-500 to-orange-600", change: "+8%" },
   ]
 
   const getCashierStats = () => [
-    { title: "Today's Sales", value: "$1,247", icon: DollarSign, color: "from-green-500 to-green-600", change: "+8%" },
-    { title: "Orders Processed", value: "47", icon: ShoppingCart, color: "from-blue-500 to-blue-600", change: "+12" },
-    { title: "Pending Orders", value: "6", icon: BarChart3, color: "from-orange-500 to-orange-600", change: "-2" },
     {
-      title: "Average Order",
-      value: "$26.50",
+      title: "Продажи за Сегодня",
+      value: "93,525₽",
+      icon: DollarSign,
+      color: "from-green-500 to-green-600",
+      change: "+8%",
+    },
+    { title: "Обработано Заказов", value: "47", icon: ShoppingCart, color: "from-blue-500 to-blue-600", change: "+12" },
+    { title: "Заказы в Ожидании", value: "6", icon: BarChart3, color: "from-orange-500 to-orange-600", change: "-2" },
+    {
+      title: "Средний Чек",
+      value: "1,987₽",
       icon: TrendingUp,
       color: "from-purple-500 to-purple-600",
       change: "+5%",

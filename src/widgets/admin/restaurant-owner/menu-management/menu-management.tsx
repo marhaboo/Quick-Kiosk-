@@ -18,54 +18,70 @@ export default function MenuManagement() {
   const [menuItems] = useState<MenuItem[]>([
     {
       id: "1",
-      name: "Classic Burger",
-      description: "Beef patty with lettuce, tomato, and special sauce",
-      price: 12.99,
-      category: "Burgers",
+      name: "Бургер «Московский»",
+      description: "Сочная говяжья котлета, свежие овощи, фирменный соус и хрустящая булочка",
+      price: 450,
+      category: "Бургеры",
       available: true,
     },
     {
       id: "2",
-      name: "Margherita Pizza",
-      description: "Fresh mozzarella, tomato sauce, and basil",
-      price: 16.99,
-      category: "Pizza",
+      name: "Пицца «Четыре сыра»",
+      description: "Моцарелла, пармезан, горгонзола и рикотта на тонком тесте",
+      price: 680,
+      category: "Пицца",
       available: true,
     },
     {
       id: "3",
-      name: "Caesar Salad",
-      description: "Romaine lettuce, croutons, parmesan, caesar dressing",
-      price: 9.99,
-      category: "Salads",
+      name: "Салат «Цезарь» с курицей",
+      description: "Хрустящий салат романо, куриная грудка, пармезан, сухарики, соус цезарь",
+      price: 380,
+      category: "Салаты",
       available: false,
     },
     {
       id: "4",
-      name: "Grilled Salmon",
-      description: "Atlantic salmon with herbs and lemon",
-      price: 22.99,
-      category: "Seafood",
+      name: "Стейк из лосося",
+      description: "Свежий норвежский лосось на гриле с лимонным маслом и зеленью",
+      price: 890,
+      category: "Горячие блюда",
+      available: true,
+    },
+    {
+      id: "5",
+      name: "Борщ украинский",
+      description: "Традиционный борщ со свеклой, капустой и говядиной, подается со сметаной",
+      price: 280,
+      category: "Супы",
+      available: true,
+    },
+    {
+      id: "6",
+      name: "Паста Карбонара",
+      description: "Спагетти с беконом, яйцом, пармезаном и черным перцем",
+      price: 420,
+      category: "Паста",
       available: true,
     },
   ])
 
-  const categories = ["All", "Burgers", "Pizza", "Salads", "Seafood"]
-  const [selectedCategory, setSelectedCategory] = useState("All")
+  const categories = ["Все", "Бургеры", "Пицца", "Салаты", "Горячие блюда", "Супы", "Паста"]
+  const [selectedCategory, setSelectedCategory] = useState("Все")
 
   const filteredItems =
-    selectedCategory === "All" ? menuItems : menuItems.filter((item) => item.category === selectedCategory)
+    selectedCategory === "Все" ? menuItems : menuItems.filter((item) => item.category === selectedCategory)
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-white">Menu Management</h1>
-          <p className="text-gray-400 mt-1">Manage your restaurant&apos;s menu items</p>
+          <h1 className="text-3xl font-bold text-white">Управление Меню</h1>
+          <p className="text-gray-400 mt-1">Управляйте позициями меню вашего ресторана</p>
         </div>
         <Button className="bg-orange-500 hover:bg-orange-600 text-white">
           <Plus className="h-4 w-4 mr-2" />
-          Add New Item
+          Добавить Позицию
         </Button>
       </div>
 
@@ -117,7 +133,7 @@ export default function MenuManagement() {
             <CardContent className="space-y-4">
               <p className="text-sm text-gray-300">{item.description}</p>
               <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold text-green-400">${item.price}</span>
+                <span className="text-2xl font-bold text-green-400">{item.price}₽</span>
                 <div className="flex space-x-2">
                   <Button
                     size="sm"
@@ -141,7 +157,7 @@ export default function MenuManagement() {
                     item.available ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"
                   }`}
                 >
-                  {item.available ? "Available" : "Unavailable"}
+                  {item.available ? "Доступно" : "Недоступно"}
                 </span>
               </div>
             </CardContent>

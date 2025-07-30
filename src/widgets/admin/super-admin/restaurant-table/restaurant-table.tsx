@@ -8,25 +8,26 @@ import { Button } from "@/shared/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { useEffect } from "react"
 
+// Компонент для статуса
 function getStatusBadge(status: string) {
   const normalized = status.toLowerCase()
   switch (normalized) {
     case "accepted":
       return (
         <span className="px-3 py-1 text-sm font-medium rounded-full bg-green-500/10 text-green-400 border border-green-500/20">
-          Approved
+          Одобрено
         </span>
       )
     case "rejected":
       return (
         <span className="px-3 py-1 text-sm font-medium rounded-full bg-red-500/10 text-red-400 border border-red-500/20">
-          Rejected
+          Отклонено
         </span>
       )
     default:
       return (
         <span className="px-3 py-1 text-sm font-medium rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-          Pending Review
+          На рассмотрении
         </span>
       )
   }
@@ -71,7 +72,7 @@ const RequestList = () => {
     return (
       <Card className="border border-[#333333] bg-[#1a1a1a] glass-effect">
         <CardContent className="p-8 text-center">
-          <p className="text-red-400">Error: {error}</p>
+          <p className="text-red-400">Ошибка: {error}</p>
         </CardContent>
       </Card>
     )
@@ -80,8 +81,8 @@ const RequestList = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-3xl font-bold text-white text-shadow-glow">Restaurant Requests</h2>
-        <p className="text-gray-300">Manage restaurant registration applications</p>
+        <h2 className="text-3xl font-bold text-white text-shadow-glow">Заявки ресторанов</h2>
+        <p className="text-gray-300">Управление заявками на регистрацию ресторанов</p>
       </div>
 
       <Card className="border border-[#333333] bg-[#1a1a1a] glass-effect">
@@ -91,8 +92,8 @@ const RequestList = () => {
               <Store className="h-5 w-5 text-orange-400" />
             </div>
             <div>
-              <CardTitle className="text-xl font-semibold text-white">Pending Applications</CardTitle>
-              <p className="text-sm text-gray-400 mt-1">{requests.length} total applications</p>
+              <CardTitle className="text-xl font-semibold text-white">Заявки в ожидании</CardTitle>
+              <p className="text-sm text-gray-400 mt-1">Всего заявок: {requests.length}</p>
             </div>
           </div>
         </CardHeader>
@@ -100,7 +101,7 @@ const RequestList = () => {
           {requests.length === 0 ? (
             <div className="text-center py-12">
               <Store className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-              <p className="text-gray-400">No restaurant requests found</p>
+              <p className="text-gray-400">Заявок ресторанов не найдено</p>
             </div>
           ) : (
             requests.map((restaurant, index) => (
@@ -130,7 +131,7 @@ const RequestList = () => {
                     <div className="flex space-x-2">
                       <Button
                         size="sm"
-                        onClick={() => dispatch(putResRequest({ id: restaurant.id, status: "Accepted" }))}
+                        onClick={() => dispatch(putResRequest({ id: restaurant.id, status: "accepted" }))}
                         className="w-10 h-10 rounded-full bg-green-500/20 border border-green-500/30 text-green-400 hover:text-green-300 hover:bg-green-500/30 hover:scale-110 transition-all duration-300 glass-effect"
                       >
                         <CheckCircle className="h-4 w-4" />

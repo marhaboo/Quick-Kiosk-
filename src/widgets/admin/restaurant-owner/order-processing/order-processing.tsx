@@ -24,38 +24,51 @@ export default function OrderProcessing() {
     {
       id: "#1250",
       tableNumber: 5,
-      customerName: "John Smith",
+      customerName: "Анна Козлова",
       items: [
-        { name: "Classic Burger", quantity: 2, price: 12.99 },
-        { name: "French Fries", quantity: 1, price: 6.5 },
-        { name: "Coca Cola", quantity: 2, price: 3.0 },
+        { name: "Бургер «Московский»", quantity: 2, price: 450 },
+        { name: "Картофель фри", quantity: 1, price: 180 },
+        { name: "Кока-Кола", quantity: 2, price: 120 },
       ],
-      total: 32.5,
+      total: 1320,
       status: "ready",
       orderTime: "19:30",
     },
     {
       id: "#1249",
       tableNumber: 12,
-      customerName: "Sarah Johnson",
+      customerName: "Владимир Смирнов",
       items: [
-        { name: "Margherita Pizza", quantity: 1, price: 16.99 },
-        { name: "Caesar Salad", quantity: 1, price: 9.99 },
+        { name: "Пицца «Четыре сыра»", quantity: 1, price: 680 },
+        { name: "Салат «Цезарь» с курицей", quantity: 1, price: 380 },
       ],
-      total: 28.0,
+      total: 1060,
       status: "ready",
       orderTime: "19:25",
     },
     {
       id: "#1248",
-      customerName: "Mike Wilson (Takeout)",
+      customerName: "Елена Волкова (Навынос)",
       items: [
-        { name: "Grilled Salmon", quantity: 1, price: 22.99 },
-        { name: "Rice", quantity: 1, price: 4.5 },
+        { name: "Стейк из лосося", quantity: 1, price: 890 },
+        { name: "Овощи гриль", quantity: 1, price: 250 },
       ],
-      total: 27.49,
+      total: 1140,
       status: "preparing",
       orderTime: "19:40",
+    },
+    {
+      id: "#1247",
+      tableNumber: 8,
+      customerName: "Игорь Петров",
+      items: [
+        { name: "Борщ украинский", quantity: 2, price: 280 },
+        { name: "Хлеб черный", quantity: 1, price: 60 },
+        { name: "Сметана", quantity: 2, price: 40 },
+      ],
+      total: 700,
+      status: "ready",
+      orderTime: "19:10",
     },
   ])
 
@@ -74,24 +87,50 @@ export default function OrderProcessing() {
     }
   }
 
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "ready":
+        return "Готов к оплате"
+      case "preparing":
+        return "Готовится"
+      case "paid":
+        return "Оплачен"
+      default:
+        return status
+    }
+  }
+
+  const getPaymentMethodText = (method: string) => {
+    switch (method) {
+      case "cash":
+        return "наличные"
+      case "card":
+        return "карту"
+      case "digital":
+        return "цифровой кошелек"
+      default:
+        return method
+    }
+  }
+
   const handlePayment = (orderId: string, method: "cash" | "card" | "digital") => {
-    console.log(`Processing payment for ${orderId} via ${method}`)
-    // Here you would handle the actual payment processing
+    console.log(`Обработка платежа для ${orderId} через ${method}`)
+    // Здесь будет обработка реального платежа
   }
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-white">Order Processing</h1>
-          <p className="text-gray-400 mt-1">Process payments and manage orders</p>
+          <h1 className="text-3xl font-bold text-white">Обработка Заказов</h1>
+          <p className="text-gray-400 mt-1">Обрабатывайте платежи и управляйте заказами</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Orders List */}
         <div className="lg:col-span-2 space-y-4">
-          <h2 className="text-xl font-semibold text-white">Active Orders</h2>
+          <h2 className="text-xl font-semibold text-white">Активные Заказы</h2>
           {orders.map((order) => (
             <Card
               key={order.id}
@@ -107,14 +146,14 @@ export default function OrderProcessing() {
                       <ShoppingCart className="h-4 w-4 text-blue-400" />
                     </div>
                     <div>
-                      <CardTitle className="text-lg text-white">Order {order.id}</CardTitle>
+                      <CardTitle className="text-lg text-white">Заказ {order.id}</CardTitle>
                       <p className="text-sm text-gray-400">
-                        {order.tableNumber ? `Table ${order.tableNumber}` : "Takeout"} • {order.customerName}
+                        {order.tableNumber ? `Стол ${order.tableNumber}` : "На вынос"} • {order.customerName}
                       </p>
                     </div>
                   </div>
                   <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}>
-                    {order.status === "ready" ? "Ready to Pay" : order.status === "preparing" ? "Preparing" : "Paid"}
+                    {getStatusText(order.status)}
                   </div>
                 </div>
               </CardHeader>
@@ -125,17 +164,19 @@ export default function OrderProcessing() {
                       <span className="text-gray-300">
                         {item.quantity}x {item.name}
                       </span>
-                      <span className="text-gray-300">${(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="text-gray-300">{(item.price * item.quantity).toFixed(0)}₽</span>
                     </div>
                   ))}
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t border-gray-700">
-                  <span className="text-sm text-gray-400">Total</span>
-                  <span className="text-lg font-bold text-green-400">${order.total.toFixed(2)}</span>
+                  <span className="text-sm text-gray-400">Итого</span>
+                  <span className="text-lg font-bold text-green-400">{order.total.toFixed(0)}₽</span>
                 </div>
                 <div className="flex justify-between items-center text-xs text-gray-400">
-                  <span>Ordered at {order.orderTime}</span>
-                  {order.paymentMethod && <span className="capitalize">Paid via {order.paymentMethod}</span>}
+                  <span>Заказан в {order.orderTime}</span>
+                  {order.paymentMethod && (
+                    <span className="capitalize">Оплачен через {getPaymentMethodText(order.paymentMethod)}</span>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -144,32 +185,32 @@ export default function OrderProcessing() {
 
         {/* Payment Panel */}
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-white">Payment Processing</h2>
+          <h2 className="text-xl font-semibold text-white">Обработка Платежей</h2>
 
           {selectedOrder ? (
             <Card className="border border-[#333333] bg-[#1a1a1a]">
               <CardHeader>
-                <CardTitle className="text-white">Process Payment</CardTitle>
-                <p className="text-gray-400">Order {selectedOrder.id}</p>
+                <CardTitle className="text-white">Обработать Платеж</CardTitle>
+                <p className="text-gray-400">Заказ {selectedOrder.id}</p>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="p-4 bg-gray-800/50 rounded-lg">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-300">Total Amount</span>
-                    <span className="text-2xl font-bold text-green-400">${selectedOrder.total.toFixed(2)}</span>
+                    <span className="text-gray-300">Общая Сумма</span>
+                    <span className="text-2xl font-bold text-green-400">{selectedOrder.total.toFixed(0)}₽</span>
                   </div>
                 </div>
 
                 {selectedOrder.status === "ready" && (
                   <div className="space-y-3">
-                    <p className="text-sm text-gray-400">Select Payment Method:</p>
+                    <p className="text-sm text-gray-400">Выберите способ оплаты:</p>
 
                     <Button
                       className="w-full bg-green-500 hover:bg-green-600 text-white"
                       onClick={() => handlePayment(selectedOrder.id, "cash")}
                     >
                       <Banknote className="h-4 w-4 mr-2" />
-                      Cash Payment
+                      Наличные
                     </Button>
 
                     <Button
@@ -177,7 +218,7 @@ export default function OrderProcessing() {
                       onClick={() => handlePayment(selectedOrder.id, "card")}
                     >
                       <CreditCard className="h-4 w-4 mr-2" />
-                      Card Payment
+                      Банковская Карта
                     </Button>
 
                     <Button
@@ -185,7 +226,7 @@ export default function OrderProcessing() {
                       onClick={() => handlePayment(selectedOrder.id, "digital")}
                     >
                       <DollarSign className="h-4 w-4 mr-2" />
-                      Digital Wallet
+                      Цифровой Кошелек
                     </Button>
                   </div>
                 )}
@@ -193,14 +234,14 @@ export default function OrderProcessing() {
                 {selectedOrder.status === "preparing" && (
                   <div className="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-center">
                     <Clock className="h-8 w-8 text-yellow-400 mx-auto mb-2" />
-                    <p className="text-yellow-400 text-sm">Order is still being prepared</p>
+                    <p className="text-yellow-400 text-sm">Заказ еще готовится</p>
                   </div>
                 )}
 
                 {selectedOrder.status === "paid" && (
                   <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-center">
                     <CheckCircle className="h-8 w-8 text-green-400 mx-auto mb-2" />
-                    <p className="text-green-400 text-sm">Payment completed</p>
+                    <p className="text-green-400 text-sm">Платеж завершен</p>
                   </div>
                 )}
               </CardContent>
@@ -209,7 +250,7 @@ export default function OrderProcessing() {
             <Card className="border border-[#333333] bg-[#1a1a1a]">
               <CardContent className="p-8 text-center">
                 <ShoppingCart className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">Select an order to process payment</p>
+                <p className="text-gray-400">Выберите заказ для обработки платежа</p>
               </CardContent>
             </Card>
           )}

@@ -27,9 +27,9 @@ export default function TableManagement() {
       status: "occupied",
       currentOrder: {
         orderId: "#1247",
-        customerName: "John Smith",
+        customerName: "Алексей Петров",
         orderTime: "19:30",
-        total: 45.5,
+        total: 1250,
       },
     },
     {
@@ -58,9 +58,9 @@ export default function TableManagement() {
       status: "occupied",
       currentOrder: {
         orderId: "#1248",
-        customerName: "Sarah Johnson",
+        customerName: "Мария Иванова",
         orderTime: "19:45",
-        total: 32.75,
+        total: 890,
       },
     },
     {
@@ -68,6 +68,25 @@ export default function TableManagement() {
       number: 6,
       capacity: 8,
       status: "available",
+    },
+    {
+      id: "7",
+      number: 7,
+      capacity: 4,
+      status: "occupied",
+      currentOrder: {
+        orderId: "#1249",
+        customerName: "Дмитрий Сидоров",
+        orderTime: "18:15",
+        total: 1680,
+      },
+    },
+    {
+      id: "8",
+      number: 8,
+      capacity: 2,
+      status: "reserved",
+      reservationTime: "21:30",
     },
   ])
 
@@ -101,6 +120,21 @@ export default function TableManagement() {
     }
   }
 
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "available":
+        return "Свободен"
+      case "occupied":
+        return "Занят"
+      case "reserved":
+        return "Забронирован"
+      case "cleaning":
+        return "Уборка"
+      default:
+        return status
+    }
+  }
+
   const statusCounts = {
     available: tables.filter((t) => t.status === "available").length,
     occupied: tables.filter((t) => t.status === "occupied").length,
@@ -112,8 +146,8 @@ export default function TableManagement() {
     <div className="space-y-6">
       <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-white">Table Management</h1>
-          <p className="text-gray-400 mt-1">Monitor and manage restaurant tables</p>
+          <h1 className="text-3xl font-bold text-white">Управление Столами</h1>
+          <p className="text-gray-400 mt-1">Мониторинг и управление столами ресторана</p>
         </div>
       </div>
 
@@ -122,25 +156,25 @@ export default function TableManagement() {
         <Card className="border border-[#333333] bg-[#1a1a1a]">
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-green-400">{statusCounts.available}</div>
-            <div className="text-sm text-gray-400">Available</div>
+            <div className="text-sm text-gray-400">Свободно</div>
           </CardContent>
         </Card>
         <Card className="border border-[#333333] bg-[#1a1a1a]">
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-red-400">{statusCounts.occupied}</div>
-            <div className="text-sm text-gray-400">Occupied</div>
+            <div className="text-sm text-gray-400">Занято</div>
           </CardContent>
         </Card>
         <Card className="border border-[#333333] bg-[#1a1a1a]">
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-yellow-400">{statusCounts.reserved}</div>
-            <div className="text-sm text-gray-400">Reserved</div>
+            <div className="text-sm text-gray-400">Забронировано</div>
           </CardContent>
         </Card>
         <Card className="border border-[#333333] bg-[#1a1a1a]">
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-blue-400">{statusCounts.cleaning}</div>
-            <div className="text-sm text-gray-400">Cleaning</div>
+            <div className="text-sm text-gray-400">Уборка</div>
           </CardContent>
         </Card>
       </div>
@@ -154,15 +188,15 @@ export default function TableManagement() {
           >
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xl text-white">Table {table.number}</CardTitle>
+                <CardTitle className="text-xl text-white">Стол {table.number}</CardTitle>
                 <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(table.status)}`}>
                   <div className="flex items-center space-x-1">
                     {getStatusIcon(table.status)}
-                    <span className="capitalize">{table.status}</span>
+                    <span>{getStatusText(table.status)}</span>
                   </div>
                 </div>
               </div>
-              <p className="text-sm text-gray-400">Capacity: {table.capacity} people</p>
+              <p className="text-sm text-gray-400">Вместимость: {table.capacity} человек</p>
             </CardHeader>
             <CardContent className="space-y-4">
               {table.currentOrder && (
@@ -170,39 +204,39 @@ export default function TableManagement() {
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <p className="text-sm font-medium text-white">{table.currentOrder.customerName}</p>
-                      <p className="text-xs text-gray-400">Order {table.currentOrder.orderId}</p>
+                      <p className="text-xs text-gray-400">Заказ {table.currentOrder.orderId}</p>
                     </div>
-                    <p className="text-sm font-bold text-green-400">${table.currentOrder.total}</p>
+                    <p className="text-sm font-bold text-green-400">{table.currentOrder.total}₽</p>
                   </div>
-                  <p className="text-xs text-gray-400">Started at {table.currentOrder.orderTime}</p>
+                  <p className="text-xs text-gray-400">Начат в {table.currentOrder.orderTime}</p>
                 </div>
               )}
 
               {table.reservationTime && table.status === "reserved" && (
                 <div className="p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-                  <p className="text-sm text-yellow-400">Reserved for {table.reservationTime}</p>
+                  <p className="text-sm text-yellow-400">Забронирован на {table.reservationTime}</p>
                 </div>
               )}
 
               <div className="flex space-x-2">
                 {table.status === "available" && (
                   <Button size="sm" className="flex-1 bg-blue-500 hover:bg-blue-600">
-                    Seat Customers
+                    Посадить Гостей
                   </Button>
                 )}
                 {table.status === "occupied" && (
                   <>
                     <Button size="sm" variant="outline" className="flex-1 border-gray-600 text-gray-300 bg-transparent">
-                      View Order
+                      Посмотреть Заказ
                     </Button>
                     <Button size="sm" className="flex-1 bg-green-500 hover:bg-green-600">
-                      Check Out
+                      Расчет
                     </Button>
                   </>
                 )}
                 {table.status === "cleaning" && (
                   <Button size="sm" className="flex-1 bg-green-500 hover:bg-green-600">
-                    Mark Clean
+                    Отметить Чистым
                   </Button>
                 )}
               </div>
