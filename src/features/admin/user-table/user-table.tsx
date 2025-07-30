@@ -1,6 +1,6 @@
 "use client"
 import { useSelector, useDispatch } from "react-redux"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { Button } from "@/shared/ui/button"
 import { Badge } from "@/shared/ui/badge"
