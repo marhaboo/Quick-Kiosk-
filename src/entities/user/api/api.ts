@@ -5,13 +5,12 @@ import axios from "axios";
 
 export const getUsers = createAsyncThunk(
   "user/getUsers",
-  async (userData?: string | null) => {
+  async () => {
     const token = localStorage.getItem("token");
-    const { data } = await axiosRequest.get("/User", {
+    const { data } = await axiosRequest.get(`/User`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      params: userData ? { Username: userData } : undefined,
     });
     return data.data;
   }
