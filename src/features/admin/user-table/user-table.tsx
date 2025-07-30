@@ -11,7 +11,6 @@ import { getUsers } from "@/entities/user/api/api"
 export default function UserTable() {
   const dispatch: AppDispatch = useDispatch()
   const { users, loading, error } = useSelector((state: RootState) => state.users)
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
 
   useEffect(() => {
     dispatch(getUsers())
