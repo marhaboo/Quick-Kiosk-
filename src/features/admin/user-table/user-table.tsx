@@ -9,7 +9,6 @@ import { Button } from "@/shared/ui/button"
 import { Badge } from "@/shared/ui/badge"
 import { UserIcon, Trash2, ShieldCheck, Shield, Plus } from "lucide-react"
 import AddUserModal from "../add-user-modal/add-user-modal"
-import type { User } from "@/entities/user/models/types"
 import Image from "next/image"
 
 const roleColors: Record<string, string> = {
