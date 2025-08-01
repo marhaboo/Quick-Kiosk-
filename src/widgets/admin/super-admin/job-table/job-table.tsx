@@ -81,9 +81,7 @@ export default function JobTable({ isLoading }: JobTableProps) {
   }
 
   const handleApprove = (id: string) => {
-    useEffect(() => {
-      putResRequest( {id: id, status: "Accepted"})
-    })
+    console.log(`Принятие заявки ${id}`)
   }
 
   const handleReject = (id: string) => {
