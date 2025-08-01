@@ -6,7 +6,7 @@ import { Button } from "@/shared/ui/button"
 import { User, Phone, Mail, Calendar, MapPin, CheckCircle, XCircle, AlertCircle } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/app/store/store"
-import { getResRequest, putResRequest } from "@/entities/res-request/api/api"
+import { getResRequest } from "@/entities/res-request/api/api"
 
 
 interface JobTableProps {
