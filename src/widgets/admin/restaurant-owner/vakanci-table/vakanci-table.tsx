@@ -3,19 +3,19 @@
 import { useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { Button } from "@/shared/ui/button"
-import { User, Phone, Mail, Calendar, MapPin, CheckCircle, XCircle, AlertCircle } from "lucide-react"
+import { User, Phone, Mail, Calendar, MapPin, CheckCircle, XCircle, AlertCircle, Briefcase } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/app/store/store"
-import { getResRequest, putResRequest } from "@/entities/res-request/api/api"
-
+import { getResRequest } from "@/entities/res-request/api/api"
+import { JobAppGet } from "@/entities/job-application/models/type"
 
 interface JobTableProps {
   isLoading: boolean
 }
 
-export default function JobTable({ isLoading }: JobTableProps) {
+export default function VakanciTable({ isLoading }: JobTableProps) {
   const dispatch: AppDispatch = useDispatch()
-  const { requests } = useSelector((state: RootState) => state.resRequest)
+  const { jobs } = useSelector((state: RootState) => state.jobApplication)
 
   useEffect(() => {
     dispatch(getResRequest())
@@ -80,28 +80,28 @@ export default function JobTable({ isLoading }: JobTableProps) {
     }
   }
 
-  const handleApprove = (id: string) => {
-    useEffect(() => {
-      putResRequest( {id: id, status: "Accepted"})
-    })
+  const handleApprove = (id: number) => {
+    console.log(`Принятие заявки ${id}`)
+    // dispatch(updateJobStatus({id, status: "Accepted"}))
   }
 
-  const handleReject = (id: string) => {
+  const handleReject = (id: number) => {
     console.log(`Отклонение заявки ${id}`)
+    // dispatch(updateJobStatus({id, status: "Rejected"}))
   }
 
   const statusCounts = {
-    pending: requests.filter((req) => req.status === "Pending").length,
-    approved: requests.filter((req) => req.status === "Accepted").length,
-    rejected: requests.filter((req) => req.status === "Rejected").length,
+    pending: jobs.filter((job: JobAppGet) => job.status === "Pending").length,
+    approved: jobs.filter((job: JobAppGet) => job.status === "Accepted").length,
+    rejected: jobs.filter((job: JobAppGet) => job.status === "Rejected").length,
   }
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-white">Заявки на Регистрацию Ресторанов</h1>
-          <p className="text-gray-400 mt-1">Управление заявками от владельцев ресторанов</p>
+          <h1 className="text-3xl font-bold text-white">Отклики на вакансии</h1>
+          <p className="text-gray-400 mt-1">Управление заявками от соискателей в рестораны</p>
         </div>
       </div>
 
@@ -129,9 +129,9 @@ export default function JobTable({ isLoading }: JobTableProps) {
 
       {/* Applications Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {requests.map((request) => (
+        {jobs.map((job: JobAppGet) => (
           <Card
-            key={request.id}
+            key={job.id}
             className="border border-[#333333] bg-[#1a1a1a] hover:border-orange-500/30 transition-all duration-300"
           >
             <CardHeader className="pb-4">
@@ -142,45 +142,49 @@ export default function JobTable({ isLoading }: JobTableProps) {
                   </div>
                   <div>
                     <CardTitle className="text-lg text-white">
-                      {request.ownerFullName || "Неизвестный владелец"}
+                      {job.firstName} {job.lastName}
                     </CardTitle>
-                    <p className="text-sm text-gray-400">{request.name || "Неизвестный ресторан"}</p>
+                    <p className="text-sm text-gray-400">{job.desiredPosition}</p>
                   </div>
                 </div>
                 <div
-                  className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center space-x-1 ${getStatusColor(request.status || "Pending")}`}
+                  className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center space-x-1 ${getStatusColor(job.status)}`}
                 >
-                  {getStatusIcon(request.status || "Pending")}
-                  <span>{getStatusText(request.status || "Pending")}</span>
+                  {getStatusIcon(job.status)}
+                  <span>{getStatusText(job.status)}</span>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2 text-sm text-gray-300">
+                  <Briefcase className="h-4 w-4 text-gray-400" />
+                  <span>{job.restaurantName}</span>
+                </div>
+                <div className="flex items-center space-x-2 text-sm text-gray-300">
                   <Phone className="h-4 w-4 text-gray-400" />
-                  <span>{request.ownerPhone || "N/A"}</span>
+                  <span>{job.phone}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-300">
                   <Mail className="h-4 w-4 text-gray-400" />
-                  <span>{request.ownerEmail || "N/A"}</span>
+                  <span>{job.email}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-300">
                   <MapPin className="h-4 w-4 text-gray-400" />
-                  <span>{request.address || "N/A"}</span>
+                  <span>{job.address}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-300">
                   <Calendar className="h-4 w-4 text-gray-400" />
-                  <span>Подано: {new Date(request.createdAt || "").toLocaleDateString("ru-RU")}</span>
+                  <span>Подано: {new Date(job.createdAt).toLocaleDateString("ru-RU")}</span>
                 </div>
               </div>
 
-              {request.status === "Pending" && (
+              {job.status === "Pending" && (
                 <div className="flex space-x-2 pt-2">
                   <Button
                     size="sm"
                     className="flex-1 bg-green-500 hover:bg-green-600"
-                    onClick={() => handleApprove(request.id)}
+                    onClick={() => handleApprove(job.id)}
                   >
                     <CheckCircle className="h-4 w-4 mr-1" />
                     Принять
@@ -189,7 +193,7 @@ export default function JobTable({ isLoading }: JobTableProps) {
                     size="sm"
                     variant="outline"
                     className="flex-1 border-red-600 text-red-400 hover:bg-red-900/20 bg-transparent"
-                    onClick={() => handleReject(request.id)}
+                    onClick={() => handleReject(job.id)}
                   >
                     <XCircle className="h-4 w-4 mr-1" />
                     Отклонить

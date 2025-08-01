@@ -110,7 +110,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
           {availableTables > 0 && (
             <p className={cn("flex items-center gap-2", theme === "dark" ? "text-gray-300" : "text-gray-600")}>
               <Armchair className="w-4 h-4" />
-              {availableTables} свободных столико��
+              {availableTables} свободных столиков
             </p>
           )}
         </div>

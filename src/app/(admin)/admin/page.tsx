@@ -1,9 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import {  useEffect, useState } from "react"
 import Sidebar from "@/widgets/admin/super-admin/sidebar/sidebar"
 import StatsCards from "@/widgets/admin/super-admin/stats-cards/stats-cards"
-import RestaurantTable from "@/widgets/admin/super-admin/restaurant-table/restaurant-table"
 import JobTable from "@/widgets/admin/super-admin/job-table/job-table"
 import MenuManagement from "@/widgets/admin/restaurant-owner/menu-management/menu-management"
 import TableManagement from "@/widgets/admin/restaurant-owner/table-management/table-management"
@@ -18,6 +17,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { getUsers } from "@/entities/user/api/api"
 import SettingsAdmin from "@/widgets/admin/super-admin/settingd-dmin/settings-admin"
 import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
+import VakanciTable from "@/widgets/admin/restaurant-owner/vakanci-table/vakanci-table"
+import { getJobApplication } from "@/entities/job-application/api/job-application-api"
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard")
@@ -40,6 +41,10 @@ export default function AdminDashboard() {
   const dispatch: AppDispatch = useDispatch()
   const { users } = useSelector((state: RootState) => state.users)
   const { requests } = useSelector((state: RootState) => state.resRequest)
+  useEffect(() => {
+    dispatch(getJobApplication())
+  })
+
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -571,7 +576,7 @@ export default function AdminDashboard() {
       case "restaurants":
         return userRole === "super-admin" ? (
           <div className="animate-fade-in-up">
-            <RestaurantTable />
+            <JobTable isLoading={isLoading} />
           </div>
         ) : (
           <AccessDenied />
@@ -579,7 +584,7 @@ export default function AdminDashboard() {
       case "jobs":
         return userRole === "super-admin" ? (
           <div className="animate-fade-in-up">
-            <JobTable isLoading={isLoading} />
+            <VakanciTable isLoading={isLoading} />
           </div>
         ) : (
           <AccessDenied />

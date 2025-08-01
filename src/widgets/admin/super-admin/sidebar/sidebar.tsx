@@ -98,8 +98,8 @@ export default function Sidebar({ activeTab, onTabChange, userRole }: SidebarPro
 
   // Logout
   const handleLogout = () => {
-    localStorage.removeItem("token") // удаляем токен
-    router.push("/") // редиректим на главную
+    localStorage.removeItem("token") 
+    router.push("/") 
   }
 
   return (
