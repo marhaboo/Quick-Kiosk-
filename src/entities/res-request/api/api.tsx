@@ -14,7 +14,7 @@ export const getResRequest = createAsyncThunk("getResRequest", async () => {
 
 export const delResRequest = createAsyncThunk(
   "delResRequest",
-  async (id: number, {dispatch}) => {
+  async (id: string, {dispatch}) => {
     const token = localStorage.getItem("token");
 
     const { data } = await axiosRequest.delete(`/RestaurantRequest/${id}`, {
@@ -30,7 +30,7 @@ export const delResRequest = createAsyncThunk(
 
 export const putResRequest = createAsyncThunk(
   "putResRequest",
-  async ({ id, status }: { id: number; status: string }, {dispatch}) => {
+  async ({ id, status }: { id: string; status: string }, {dispatch}) => {
     const token = localStorage.getItem("token");
 
     const { data } = await axiosRequest.put(
