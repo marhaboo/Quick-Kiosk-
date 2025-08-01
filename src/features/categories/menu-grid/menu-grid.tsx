@@ -74,8 +74,8 @@ function MenuItemSkeleton() {
 }
 
 export default function MenuGrid({ items, cartItems, onAddToCart, onRemoveFromCart }: MenuGridProps) {
-  const [visibleCount, setVisibleCount] = useState(6)
-  const ITEMS_PER_PAGE = 6
+  const [visibleCount, setVisibleCount] = useState(8)
+  const ITEMS_PER_PAGE = 8
   const { currentRestaurantLoading } = useSelector((state: RootState) => state.resById)
   const { theme } = useTheme() // Get current theme
 
@@ -93,19 +93,19 @@ export default function MenuGrid({ items, cartItems, onAddToCart, onRemoveFromCa
   }
 
   const showLess = () => {
-    setVisibleCount(6)
+    setVisibleCount(8)
   }
 
   const visibleItems = items.slice(0, visibleCount)
   const hasMore = visibleCount < items.length
-  const canShowLess = visibleCount > 6
+  const canShowLess = visibleCount > 8
 
   // Show skeleton loading state
   if (currentRestaurantLoading) {
     return (
       <div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6 pt-12">
-          {Array.from({ length: 6 }).map((_, index) => (
+          {Array.from({ length: 8 }).map((_, index) => (
             <MenuItemSkeleton key={index} />
           ))}
         </div>
