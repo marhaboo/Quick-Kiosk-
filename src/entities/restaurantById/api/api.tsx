@@ -7,10 +7,6 @@ export const getRestaurantById = createAsyncThunk("getRestaurantById", async (id
   return data
 })
 
-export const updateRestaurantById = createAsyncThunk("updateRestaurantById", async (restaurantData: any) => {
-  const { data } = await axiosRequest.put(`/Restaurant/${restaurantData.id}`, restaurantData)
-  return data
-})
 
 export const deleteRestaurantById = createAsyncThunk("deleteRestaurantById", async (id: number) => {
   const token = localStorage.getItem("token")

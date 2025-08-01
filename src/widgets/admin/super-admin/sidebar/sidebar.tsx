@@ -94,7 +94,7 @@ export default function Sidebar({ activeTab, onTabChange, userRole }: SidebarPro
     }
   }
 
-  const { menuItems, roleTitle, roleSubtitle, roleIcon: RoleIcon, roleInitials } = getMenuConfig()
+  const { menuItems, roleTitle, roleSubtitle, roleIcon: RoleIcon } = getMenuConfig()
 
   // Logout
   const handleLogout = () => {

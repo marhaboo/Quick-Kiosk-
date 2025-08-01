@@ -128,10 +128,10 @@ export function RestaurantList() {
       {filteredRestaurants.length === 0 && selectedCategory ? (
         <div className="text-center py-16">
           <h3 className={cn("text-xl font-semibold mb-2", theme === "dark" ? "text-white" : "text-gray-900")}>
-            Нет ресторанов в категории "{selectedCategory}"
+            Нет ресторанов в категории &quot;{selectedCategory}&ldquo;
           </h3>
           <p className={cn(theme === "dark" ? "text-gray-400" : "text-gray-500")}>
-            Попробуйте выбрать другую категорию или "Все"
+            Попробуйте выбрать другую категорию или &quot;Все&ldquo;
           </p>
         </div>
       ) : (

@@ -137,7 +137,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
   }
 
   if (isSubmitted) {
-    setShowModal(true)
+    setShowModal(!showModal)
     return (
       <SuccessOrder
         orderType={orderType}

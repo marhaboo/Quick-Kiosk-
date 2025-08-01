@@ -14,6 +14,7 @@ import { AppDispatch, RootState } from "@/app/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { deleteRestaurantById, getRestaurantById } from "@/entities/restaurantById/api/api";
+import Image from "next/image";
 
 export default function MenuManagementUI() {
   const { currentRestaurant } = useSelector((state: RootState) => state.resById);
@@ -91,7 +92,7 @@ export default function MenuManagementUI() {
               className="border border-[#333333] bg-[#1a1a1a] hover:border-orange-500/30 transition-all duration-300 overflow-hidden"
             >
               <div className="relative">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&h=250"
                   alt={item.name}
                   className="w-full h-48 object-cover"
