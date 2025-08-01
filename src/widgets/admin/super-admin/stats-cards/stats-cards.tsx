@@ -1,6 +1,13 @@
 "use client"
+import { AppDispatch, RootState } from "@/app/store/store"
+import { getOrder } from "@/entities/cart-order/api/api-order"
+import { getRestaurants } from "@/entities/home/api/home-api"
+import { getResRequest } from "@/entities/res-request/api/api"
+import { getUsers } from "@/entities/user/api/api"
 import { Card, CardContent } from "@/shared/ui/card"
 import { BarChart3, Users, Store, DollarSign, ShoppingCart, TrendingUp } from "lucide-react"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
 
 interface StatsCardsProps {
   isLoading: boolean
@@ -8,7 +15,26 @@ interface StatsCardsProps {
 }
 
 export default function StatsCards({ isLoading, userRole }: StatsCardsProps) {
+
+  const { data } = useSelector((state:RootState) => state.home)
+  const {orders} = useSelector((state:RootState) => state.orders)
+  const {requests} = useSelector((state:RootState) => state.resRequest)
+  const { users } = useSelector((state: RootState) => state.users)
+  const dispatch:AppDispatch = useDispatch()
+  useEffect(() => {
+   dispatch(getRestaurants())
+   dispatch(getOrder())
+   dispatch(getResRequest())  
+    dispatch(getUsers())
+  }, [dispatch])
+
+  const restaurantsCount = data?.length || 0
+  const ordersCount = orders?.length || 0
+  const requestsCount = requests?.length || 0
+  const usersCount = users?.length || 0
+
   if (isLoading) {
+
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {Array.from({ length: 4 }).map((_, index) => (
@@ -28,30 +54,33 @@ export default function StatsCards({ isLoading, userRole }: StatsCardsProps) {
     )
   }
 
-  const getSuperAdminStats = () => [
-    { title: "Всего Ресторанов", value: "127", icon: Store, color: "from-blue-500 to-blue-600", change: "+12%" },
-    {
-      title: "Активные Пользователи",
-      value: "2,847",
-      icon: Users,
-      color: "from-green-500 to-green-600",
-      change: "+18%",
-    },
+ const getSuperAdminStats = () => [
+  { 
+    title: "Всего Ресторанов", 
+    value: restaurantsCount, 
+    icon: Store, 
+    color: "from-blue-500 to-blue-600" 
+  },
+  { 
+    title: "Активные Пользователи", 
+    value: usersCount, 
+    icon: Users, 
+    color: "from-green-500 to-green-600" 
+  },
     {
       title: "Заявки на Рассмотрении",
-      value: "23",
+      value: requestsCount,
       icon: BarChart3,
       color: "from-orange-500 to-orange-600",
-      change: "+5%",
     },
-    {
-      title: "Месячная Выручка",
-      value: "3,592,900₽",
-      icon: DollarSign,
-      color: "from-purple-500 to-purple-600",
-      change: "+23%",
-    },
-  ]
+  { 
+    title: "Всего Заказов", 
+    value: ordersCount, 
+    icon: BarChart3, 
+    color: "from-orange-500 to-orange-600" 
+  }
+]
+
 
   const getRestaurantOwnerStats = () => [
     {
@@ -101,26 +130,25 @@ export default function StatsCards({ isLoading, userRole }: StatsCardsProps) {
   const stats = getStats()
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-      {stats.map((stat, index) => (
-        <Card
-          key={index}
-          className="border border-[#333333] bg-[#1a1a1a] hover:border-orange-500/30 transition-all duration-300 glass-effect"
-        >
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-400">{stat.title}</p>
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
-                <p className="text-xs text-green-400 mt-1">{stat.change}</p>
-              </div>
-              <div className={`p-3 bg-gradient-to-br ${stat.color} rounded-lg`}>
-                <stat.icon className="h-6 w-6 text-white" />
-              </div>
+     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+    {stats.map((stat, index) => (
+      <Card
+        key={index}
+        className="border border-[#333333] bg-[#1a1a1a] hover:border-orange-500/30 transition-all duration-300 glass-effect"
+      >
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-400">{stat.title}</p>
+              <p className="text-2xl font-bold text-white">{stat.value}</p>
             </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+            <div className={`p-3 bg-gradient-to-br ${stat.color} rounded-lg`}>
+              <stat.icon className="h-6 w-6 text-white" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
   )
 }

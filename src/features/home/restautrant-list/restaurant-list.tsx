@@ -4,22 +4,32 @@ import { RestaurantCard } from "@/widgets/home/restaurant-card/restaurant-card"
 import { useDispatch, useSelector } from "react-redux"
 import type { Restaurant } from "@/entities/home/models/types"
 import type { AppDispatch, RootState } from "@/app/store/store"
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
+import { useTheme } from "next-themes"
+import { cn } from "@/shared/lib/utils" 
+import { CategoryFilter } from "@/widgets/home/category-filter/category-filter"
 import { getRestaurants } from "@/entities/home/api/home-api"
+import { setCategoryFilter } from "@/entities/home/reducers/homeSlice"
 
 function RestaurantCardSkeleton() {
+  const { theme } = useTheme()
   return (
-    <div className="bg-gray-800/50 rounded-xl overflow-hidden animate-pulse">
-      <div className="aspect-video bg-gray-700/50" />
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden animate-pulse",
+        theme === "dark" ? "bg-gray-800/50" : "bg-white shadow-sm",
+      )}
+    >
+      <div className={cn("aspect-video", theme === "dark" ? "bg-gray-700/50" : "bg-gray-200")} />
       <div className="p-4 space-y-3">
-        <div className="h-6 bg-gray-700/50 rounded w-3/4" />
+        <div className={cn("h-6 rounded w-3/4", theme === "dark" ? "bg-gray-700/50" : "bg-gray-300")} />
         <div className="space-y-2">
-          <div className="h-4 bg-gray-700/50 rounded w-full" />
-          <div className="h-4 bg-gray-700/50 rounded w-2/3" />
+          <div className={cn("h-4 rounded w-full", theme === "dark" ? "bg-gray-700/50" : "bg-gray-200")} />
+          <div className={cn("h-4 rounded w-2/3", theme === "dark" ? "bg-gray-700/50" : "bg-gray-200")} />
         </div>
         <div className="flex items-center justify-between pt-2">
-          <div className="h-5 bg-gray-700/50 rounded w-20" />
-          <div className="h-8 bg-gray-700/50 rounded w-16" />
+          <div className={cn("h-5 rounded w-20", theme === "dark" ? "bg-gray-700/50" : "bg-gray-300")} />
+          <div className={cn("h-8 rounded w-16", theme === "dark" ? "bg-gray-700/50" : "bg-gray-300")} />
         </div>
       </div>
     </div>
@@ -39,21 +49,52 @@ function RestaurantListSkeleton() {
 }
 
 export function RestaurantList() {
-  const restaurants = useSelector((state: RootState) => state.home.data) as Restaurant[]
+  const allRestaurants = useSelector((state: RootState) => state.home.data) as Restaurant[]
   const loading = useSelector((state: RootState) => state.home.loading)
+  const selectedCategory = useSelector((state: RootState) => state.home.selectedCategory)
   const dispatch: AppDispatch = useDispatch()
+  const { theme } = useTheme()
 
   useEffect(() => {
     dispatch(getRestaurants())
   }, [dispatch])
 
+  // Extract unique categories from all restaurants
+  const categories = useMemo(() => {
+    const uniqueCuisines = new Set<string>()
+    allRestaurants.forEach((restaurant) => {
+      if (restaurant.cuisine) {
+        // Use restaurant.cuisine directly
+        uniqueCuisines.add(restaurant.cuisine)
+      }
+    })
+    return Array.from(uniqueCuisines).sort()
+  }, [allRestaurants])
+
+  // Filter restaurants based on selected category
+  const filteredRestaurants = useMemo(() => {
+    if (!selectedCategory) {
+      return allRestaurants
+    }
+    return allRestaurants.filter((restaurant) => restaurant.cuisine === selectedCategory)
+  }, [allRestaurants, selectedCategory])
+
+  const handleSelectCategory = (category: string | null) => {
+    dispatch(setCategoryFilter(category))
+  }
+
   // Show skeleton while loading
   if (loading) {
-    return <RestaurantListSkeleton />
+    return (
+      <>
+        <CategoryFilter categories={[]} selectedCategory={selectedCategory} onSelectCategory={handleSelectCategory} />
+        <RestaurantListSkeleton />
+      </>
+    )
   }
 
   // Show empty state when not loading and no restaurants
-  if (!restaurants || restaurants.length === 0) {
+  if (!allRestaurants || allRestaurants.length === 0) {
     return (
       <div className="text-center py-16">
         <div className="w-16 h-16 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -66,20 +107,42 @@ export function RestaurantList() {
             />
           </svg>
         </div>
-        <h3 className="text-xl font-semibold text-white mb-2">Рестораны не найдены</h3>
-        <p className="text-gray-400">Попробуйте обновить страницу или зайти позже</p>
+        <h3 className={cn("text-xl font-semibold mb-2", theme === "dark" ? "text-white" : "text-gray-900")}>
+          Рестораны не найдены
+        </h3>
+        <p className={cn(theme === "dark" ? "text-gray-400" : "text-gray-500")}>
+          Попробуйте обновить страницу или зайти позже
+        </p>
       </div>
     )
   }
 
   // Show restaurants when loaded
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-      {restaurants.map((restaurant, index) => (
-        <div key={restaurant.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 150}ms` }}>
-          <RestaurantCard restaurant={restaurant} />
+    <>
+      <CategoryFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onSelectCategory={handleSelectCategory}
+      />
+      {filteredRestaurants.length === 0 && selectedCategory ? (
+        <div className="text-center py-16">
+          <h3 className={cn("text-xl font-semibold mb-2", theme === "dark" ? "text-white" : "text-gray-900")}>
+            Нет ресторанов в категории "{selectedCategory}"
+          </h3>
+          <p className={cn(theme === "dark" ? "text-gray-400" : "text-gray-500")}>
+            Попробуйте выбрать другую категорию или "Все"
+          </p>
         </div>
-      ))}
-    </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {filteredRestaurants.map((restaurant, index) => (
+            <div key={restaurant.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 150}ms` }}>
+              <RestaurantCard restaurant={restaurant} />
+            </div>
+          ))}
+        </div>
+      )}
+    </>
   )
 }

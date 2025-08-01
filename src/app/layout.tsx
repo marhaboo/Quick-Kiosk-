@@ -1,27 +1,25 @@
 import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import "./globals.css"
+import { Inter } from "next/font/google"
+import { ThemeProvider } from "./providers/theme-provider"
 import { Providers } from "./(router)/provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
-export const metadata: Metadata = {
-  title: "Рестораны Душанбе",
-  description: "Лучшие рестораны и кафе Душанбе",
+export const metadata = {
+  title: "ResNet - Рестораны и кафе Душанбе",
+  description: "Откройте для себя лучшие места для незабываемого гастрономического опыта в столице Таджикистана",
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru">
+    <html lang="ru" suppressHydrationWarning>
       <body className={inter.className}>
-        <Providers>
-          <div className="min-h-screen bg-black">{children}</div>
-        </Providers>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Providers>
+          {children}
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   )

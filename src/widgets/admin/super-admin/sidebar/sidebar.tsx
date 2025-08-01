@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import {
   BarChart3,
   Users,
@@ -7,7 +8,6 @@ import {
   Briefcase,
   ChevronLeft,
   ChevronRight,
-  Settings,
   Shield,
   FileText,
   Table,
@@ -16,6 +16,7 @@ import {
   User,
   DollarSign,
   CreditCard,
+  LogOut,
 } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { cn } from "@/shared/lib/utils"
@@ -27,16 +28,14 @@ interface SidebarProps {
   userName: string | null
 }
 
-// Menu items for Super Admin
+// Меню для разных ролей
 const superAdminMenuItems = [
   { id: "dashboard", label: "Обзор", icon: BarChart3 },
   { id: "restaurants", label: "Рестораны", icon: Store },
   { id: "jobs", label: "Вакансии", icon: Briefcase },
   { id: "users", label: "Пользователи", icon: Users },
-  { id: "settings", label: "Настройки", icon: Settings },
 ]
 
-// Menu items for Restaurant Owner
 const restaurantOwnerMenuItems = [
   { id: "dashboard", label: "Главная", icon: BarChart3 },
   { id: "menu", label: "Меню", icon: ChefHat },
@@ -44,10 +43,8 @@ const restaurantOwnerMenuItems = [
   { id: "orders", label: "Заказы", icon: ShoppingCart },
   { id: "staff", label: "Персонал", icon: Users },
   { id: "analytics", label: "Аналитика", icon: FileText },
-  { id: "settings", label: "Настройки", icon: Settings },
 ]
 
-// Menu items for Cashier
 const cashierMenuItems = [
   { id: "dashboard", label: "Главная", icon: BarChart3 },
   { id: "orders", label: "Заказы", icon: ShoppingCart },
@@ -55,55 +52,60 @@ const cashierMenuItems = [
   { id: "profile", label: "Профиль", icon: User },
 ]
 
-
-export default function Sidebar({ activeTab, onTabChange, userRole, userName }: SidebarProps) {
+export default function Sidebar({ activeTab, onTabChange, userRole }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const router = useRouter()
 
-  // Select menu items and config based on user role
+  // выбор меню и инфо по роли
   const getMenuConfig = () => {
-  switch (userRole) {
-    case "super-admin":
-      return {
-        menuItems: superAdminMenuItems,
-        roleTitle: "Супер-админ",
-        roleSubtitle: "Полный контроль системы",
-        roleIcon: Shield,
-        roleInitials: "СА",
-      }
-    case "restaurant-owner":
-      return {
-        menuItems: restaurantOwnerMenuItems,
-        roleTitle: "Владелец ресторана",
-        roleSubtitle: "Управление рестораном",
-        roleIcon: Store,
-        roleInitials: "ВР",
-      }
-    case "cashier":
-      return {
-        menuItems: cashierMenuItems,
-        roleTitle: "Кассир",
-        roleSubtitle: "Работа с заказами и оплатами",
-        roleIcon: DollarSign,
-        roleInitials: "КА",
-      }
-    default:
-      return {
-        menuItems: [],
-        roleTitle: "Загрузка...",
-        roleSubtitle: "Определяем вашу роль",
-        roleIcon: BarChart3,
-        roleInitials: "...",
-      }
+    switch (userRole) {
+      case "super-admin":
+        return {
+          menuItems: superAdminMenuItems,
+          roleTitle: "Супер-админ",
+          roleSubtitle: "Полный контроль системы",
+          roleIcon: Shield,
+          roleInitials: "СА",
+        }
+      case "restaurant-owner":
+        return {
+          menuItems: restaurantOwnerMenuItems,
+          roleTitle: "Админ",
+          roleSubtitle: "Управление рестораном",
+          roleIcon: Store,
+          roleInitials: "ВР",
+        }
+      case "cashier":
+        return {
+          menuItems: cashierMenuItems,
+          roleTitle: "Кассир",
+          roleSubtitle: "Работа с заказами и оплатами",
+          roleIcon: DollarSign,
+          roleInitials: "КА",
+        }
+      default:
+        return {
+          menuItems: [],
+          roleTitle: "Загрузка...",
+          roleSubtitle: "Определяем вашу роль",
+          roleIcon: BarChart3,
+          roleInitials: "...",
+        }
+    }
   }
-}
-
 
   const { menuItems, roleTitle, roleSubtitle, roleIcon: RoleIcon, roleInitials } = getMenuConfig()
+
+  // Logout
+  const handleLogout = () => {
+    localStorage.removeItem("token") // удаляем токен
+    router.push("/") // редиректим на главную
+  }
 
   return (
     <div
       className={cn(
-        "bg-[#1a1a1a] border-r border-[#333333] transition-all duration-300 ease-in-out h-screen flex flex-col",
+        "bg-[#1a1a1a] border-r border-[#333333] transition-all duration-300 ease-in-out h-screen   flex flex-col",
         isCollapsed ? "w-16 items-center" : "w-80",
       )}
     >
@@ -127,7 +129,7 @@ export default function Sidebar({ activeTab, onTabChange, userRole, userName }: 
             variant="ghost"
             size="sm"
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="text-gray-400  hover:text-white hover:bg-gray-700/50 transition-all duration-200 rounded-lg"
+            className="text-gray-400 hover:text-white hover:bg-gray-700/50 transition-all duration-200 rounded-lg"
             type="button"
           >
             {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
@@ -160,7 +162,7 @@ export default function Sidebar({ activeTab, onTabChange, userRole, userName }: 
                   !isCollapsed && "mr-3",
                 )}
               />
-              {!isCollapsed && <span className="">{item.label}</span>}
+              {!isCollapsed && <span>{item.label}</span>}
             </button>
           )
         })}
@@ -169,19 +171,15 @@ export default function Sidebar({ activeTab, onTabChange, userRole, userName }: 
       {/* Footer */}
       {!isCollapsed && (
         <div className="p-6 border-t border-[#333333] animate-fade-in-up">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 gradient-orange rounded-full flex items-center justify-center">
-              <span className="text-sm font-medium text-white">{roleInitials}</span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">{userName}</p>
-              <p className="text-xs text-gray-400 truncate">
-                {userRole === "super-admin" && "Полный доступ к системе"}
-                {userRole === "restaurant-owner" && "Управление рестораном"}
-                {userRole === "cashier" && "Обработка платежей и заказов"}
-              </p>
-            </div>
-          </div>
+          {/* Logout Button */}
+          <Button
+            onClick={handleLogout}
+            variant="ghost"
+            className="w-full flex items-center justify-start text-gray-400 hover:text-white hover:bg-gray-700/50 transition-all duration-200 rounded-lg"
+          >
+            <LogOut className="h-5 w-5 mr-2" />
+            Выйти
+          </Button>
         </div>
       )}
     </div>

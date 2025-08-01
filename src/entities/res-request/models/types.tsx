@@ -6,7 +6,7 @@ export interface WorkingHour {
 }
 
 export interface RestaurantRequest {
-  id: number;
+  id: string;
   name: string;
   description: string;
   cuisine: string;

@@ -1,6 +1,6 @@
 "use client"
 import { useSelector, useDispatch } from "react-redux"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { Button } from "@/shared/ui/button"
 import { Badge } from "@/shared/ui/badge"
@@ -11,6 +11,7 @@ import { getUsers } from "@/entities/user/api/api"
 export default function UserTable() {
   const dispatch: AppDispatch = useDispatch()
   const { users, loading, error } = useSelector((state: RootState) => state.users)
+  const [visibleCount, setVisibleCount] = useState(6)
 
   useEffect(() => {
     dispatch(getUsers())
@@ -20,7 +21,7 @@ export default function UserTable() {
     switch (role) {
       case "Admin":
         return "border-red-500/30 text-red-400"
-      case "Restaurant Owner":
+      case "Owner":
         return "border-blue-500/30 text-blue-400"
       case "Cashier":
         return "border-green-500/30 text-green-400"
@@ -33,7 +34,7 @@ export default function UserTable() {
     switch (role) {
       case "Admin":
         return <Shield className="h-4 w-4" />
-      case "Restaurant Owner":
+      case "Owner":
         return <Store className="h-4 w-4" />
       case "Cashier":
         return <CreditCard className="h-4 w-4" />
@@ -46,7 +47,7 @@ export default function UserTable() {
     switch (role) {
       case "Admin":
         return "Администратор"
-      case "Restaurant Owner":
+      case "Owner":
         return "Владелец ресторана"
       case "Cashier":
         return "Кассир"
@@ -69,7 +70,7 @@ export default function UserTable() {
 
   const roleCounts = {
     admin: users.filter((user) => user.role === "Admin").length,
-    restaurantOwner: users.filter((user) => user.role === "Restaurant Owner").length,
+    restaurantOwner: users.filter((user) => user.role === "Owner").length,
     cashier: users.filter((user) => user.role === "Cashier").length,
   }
 
@@ -150,85 +151,81 @@ export default function UserTable() {
       </div>
 
       {/* Users Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {users.map((user) => (
-          <Card
-            key={user.username}
-            className="border border-[#333333] bg-[#1a1a1a] hover:border-orange-500/30 transition-all duration-300"
-          >
-            <CardHeader className="pb-4">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-orange-500/20 border border-orange-500/30 rounded-lg">
-                    {getRoleIcon(user.role)}
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg text-white">{user.username}</CardTitle>
-                    <p className="text-sm text-gray-400">ID: {user.username.toLowerCase()}</p>
-                  </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      {users.slice(0, visibleCount).map((user) => (
+        <Card
+          key={user.username}
+          className="border border-[#333333] bg-[#1a1a1a] hover:border-orange-500/30 transition-all duration-300"
+        >
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-orange-500/20 border border-orange-500/30 rounded-lg">
+                  {getRoleIcon(user.role)}
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleEditUser(user.username)}
-                    className="text-gray-400 hover:text-white hover:bg-gray-700/50"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleDeleteUser(user.username)}
-                    className="text-gray-400 hover:text-red-400 hover:bg-red-900/20"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                <div>
+                  <CardTitle className="text-lg text-white">{user.username}</CardTitle>
+                  <p className="text-sm text-gray-400">ID: {user.username.toLowerCase()}</p>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2 text-sm text-gray-300">
-                  <Mail className="h-4 w-4 text-gray-400" />
-                  <span>{user.username.toLowerCase()}@restaurant.ru</span>
-                </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-300">
-                  <Calendar className="h-4 w-4 text-gray-400" />
-                  <span>Создан: {new Date().toLocaleDateString("ru-RU")}</span>
-                </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleEditUser(user.username)}
+                  className="text-gray-400 hover:text-white hover:bg-gray-700/50"
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleDeleteUser(user.username)}
+                  className="text-gray-400 hover:text-red-400 hover:bg-red-900/20"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2 text-sm text-gray-300">
+                <Mail className="h-4 w-4 text-gray-400" />
+                <span>{user.username.toLowerCase()}@restaurant.ru</span>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-gray-300">
+                <Calendar className="h-4 w-4 text-gray-400" />
+                <span>Создан: {new Date().toLocaleDateString("ru-RU")}</span>
+              </div>
+            </div>
 
-              <div className="pt-2 border-t border-gray-700">
-                <p className="text-sm text-gray-400 mb-2">Роль:</p>
-                <Badge variant="outline" className={getRoleColor(user.role)}>
-                  <div className="flex items-center space-x-1">
-                    {getRoleIcon(user.role)}
-                    <span>{getRoleText(user.role)}</span>
-                  </div>
-                </Badge>
-              </div>
-
-              <div className="pt-2 border-t border-gray-700">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-400">Статус:</span>
-                  <Badge variant="outline" className="border-green-500/30 text-green-400">
-                    Активен
-                  </Badge>
+            <div className="pt-2 border-t border-gray-700">
+              <p className="text-sm text-gray-400 mb-2">Роль:</p>
+              <Badge variant="outline" className={getRoleColor(user.role)}>
+                <div className="flex items-center space-x-1">
+                  {getRoleIcon(user.role)}
+                  <span>{getRoleText(user.role)}</span>
                 </div>
-              </div>
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
 
-              <div className="pt-2 border-t border-gray-700">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-400">Последний вход:</span>
-                  <span className="text-sm text-gray-300">Сегодня</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+    {/* Load More button */}
+    {visibleCount < users.length && (
+      <div className="flex justify-center mt-6">
+        <Button
+          variant="outline"
+          onClick={() => setVisibleCount((prev) => prev + 6)}
+          className="text-white border-gray-700 hover:border-orange-500 hover:bg-orange-500/20"
+        >
+          Показать ещё
+        </Button>
       </div>
-
+    )}
       {users.length === 0 && !loading && (
         <div className="text-center py-12">
           <Users className="h-16 w-16 text-gray-600 mx-auto mb-4" />

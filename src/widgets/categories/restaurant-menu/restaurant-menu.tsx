@@ -3,27 +3,28 @@
 import { useEffect, useState } from "react"
 import { MenuHeader } from "@/widgets/categories/menu-header/menu-header"
 import MenuSidebar from "@/features/categories/menu-sidebar/menu-sidebar"
-import { CartSidebar } from "../cart-sidebar/cart-sidebar"
+import { CartSidebar } from "@/widgets/categories/cart-sidebar/cart-sidebar"
 import MenuGrid from "@/features/categories/menu-grid/menu-grid"
 import { getRestaurantById } from "@/entities/restaurantById/api/api"
 import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, RootState } from "@/app/store/store"
+import type { AppDispatch, RootState } from "@/app/store/store"
 import { API_BASE_URL } from "@/shared/utils/image-utils"
-import { ShortMenuItem } from "@/entities/home/models/types"
-
+import type { ShortMenuItem } from "@/entities/home/models/types"
+import { useTheme } from "next-themes" // Import useTheme
+import { cn } from "@/shared/lib/utils" // Import cn
 
 export interface CartItem extends ShortMenuItem {
   quantity: number
 }
 
-
-export function RestaurantMenu({ restaurantId }: { restaurantId: string; }) {
+export function RestaurantMenu({ restaurantId }: { restaurantId: string }) {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [searchQuery, setSearchQuery] = useState("")
-
   const { currentRestaurant } = useSelector((state: RootState) => state.resById)
   const dispatch: AppDispatch = useDispatch()
+  const { theme } = useTheme() // Get current theme
+
   const categories = [
     {
       id: "all",
@@ -33,25 +34,24 @@ export function RestaurantMenu({ restaurantId }: { restaurantId: string; }) {
     ...(currentRestaurant?.categories?.map((cat) => ({
       id: cat.id.toString(),
       name: cat.name,
-      image: API_BASE_URL + cat.imageUrl
+      image: API_BASE_URL + cat.imageUrl,
     })) ?? []),
   ]
 
-    const isImageUrl = (url:string) => {
-    return url.startsWith("/") 
+  const isImageUrl = (url: string) => {
+    return url.startsWith("/")
   }
 
   const menuItems: ShortMenuItem[] = currentRestaurant?.menu
-    ?
-    currentRestaurant?.menu?.map((item) => ({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      image: isImageUrl(item.imageUrl) ? API_BASE_URL + item.imageUrl : "/images/placeholder.png",
-      category: item.categoryId.toString() || "all",
-      description: item.description
-    })) : []
-
+    ? currentRestaurant?.menu?.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        image: isImageUrl(item.imageUrl) ? API_BASE_URL + item.imageUrl : "/placeholder.svg?height=104&width=100",
+        category: item.categoryId.toString() || "all",
+        description: item.description,
+      }))
+    : []
 
   useEffect(() => {
     dispatch(getRestaurantById(restaurantId))
@@ -90,10 +90,16 @@ export function RestaurantMenu({ restaurantId }: { restaurantId: string; }) {
   const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   return (
-    <div className="p-6 bg-[url('/images/bg-of-site.png')] bg-no-repeat bg-cover bg-center before:absolute before:inset-0 before:bg-black/50 before:z-0">
+    <div
+      className={cn(
+        "p-6",
+        theme === "dark"
+          ? "bg-[url('/images/bg-of-site.png')] bg-no-repeat bg-cover bg-center before:absolute before:inset-0 before:bg-black/50 before:z-0"
+          : "bg-neutral-100",
+      )}
+    >
       {/* Верхняя панель */}
       <MenuHeader searchQuery={searchQuery} restaurant={currentRestaurant!} onSearchChange={setSearchQuery} />
-
       <div className="flex gap-7">
         {/* Основной контент */}
         <div className="flex-1 flex flex-col">
@@ -103,10 +109,9 @@ export function RestaurantMenu({ restaurantId }: { restaurantId: string; }) {
             selectedCategory={selectedCategory}
             onCategorySelect={setSelectedCategory}
           />
-
           {/* Сетка меню */}
           <div className="flex-1 overflow-y-auto">
-            <h2 className="text-lg font-bold text-white mb-6">Меню</h2>
+            <h2 className={cn("text-lg font-bold mb-6", theme === "dark" ? "text-white" : "text-gray-900")}>Меню</h2>
             <MenuGrid
               items={filteredItems}
               cartItems={cartItems}
@@ -115,9 +120,9 @@ export function RestaurantMenu({ restaurantId }: { restaurantId: string; }) {
             />
           </div>
         </div>
-
         {/* Правая панель корзины */}
         <CartSidebar
+          restaurantId={restaurantId}
           items={cartItems}
           totalAmount={totalAmount}
           onUpdateQuantity={updateQuantity}

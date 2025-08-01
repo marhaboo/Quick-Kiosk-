@@ -1,27 +1,39 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { getRestaurants } from "../api/home-api";
-import { Restaurant } from "../models/types";
+import { createSlice } from "@reduxjs/toolkit"
+import { getRestaurants } from "../api/home-api" 
+import type { Restaurant } from "../models/types" 
 
-const initialState = {
-  data: [] as Restaurant[],
-  loading: false,
+interface HomeState {
+  data: Restaurant[]
+  loading: boolean
+  selectedCategory: string | null 
 }
 
-export const homeSlice = createSlice({
-  name: "HomeSlice",
+const initialState: HomeState = {
+  data: [],
+  loading: false,
+  selectedCategory: null, 
+}
+
+const homeSlice = createSlice({
+  name: "HomeSlice", 
   initialState,
-  reducers: {},
+  reducers: {
+    setCategoryFilter: (state, action: { payload: string | null }) => {
+      state.selectedCategory = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(getRestaurants.fulfilled, (state, action) => {
-        state.data = action.payload.data
-        state.loading = false
-      })
       .addCase(getRestaurants.pending, (state) => {
         state.loading = true
       })
-  }
+      .addCase(getRestaurants.fulfilled, (state, action) => {
+        state.data = action.payload.data 
+        state.loading = false
+      })
 
+  },
 })
 
+export const { setCategoryFilter } = homeSlice.actions
 export default homeSlice.reducer

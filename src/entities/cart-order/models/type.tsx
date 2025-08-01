@@ -9,9 +9,21 @@ export interface OrderItems {
   fullName: string;
   phoneNumber: string;
   tableId: number | null;
+  restaurantId: number;
   type: string;
   deliveryAddress: string | null;
   bookingDateTime: string | null;
   status: string;
   totalAmount: number;
+}
+
+export interface OrderProps {
+  id: number;
+  totalAmount: number;
+  createdAt: string;
+  items: OrderItem[];
+  fullName: string;
+  phoneNumber: string;
+  deliveryAddress: string | null;
+  status: string;
 }
