@@ -13,7 +13,7 @@ import type { OrderItem, OrderItems } from "@/entities/cart-order/models/type"
 import { useTheme } from "next-themes"
 import { cn } from "@/shared/lib/utils"
 import type { CartItem } from "../restaurant-menu/restaurant-menu"
-import { SuccessOrder } from "@/features/categories/succes-page/succes-page"
+
 
 interface CartSidebarProps {
   items: CartItem[]
