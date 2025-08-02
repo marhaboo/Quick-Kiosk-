@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/shared/utils/cn"
+import { cn } from "@/shared/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
 import { Users, Clock, CheckCircle, AlertCircle } from "lucide-react"
 import { useTheme } from "next-themes"
@@ -19,19 +19,26 @@ interface TableGridProps {
   onTableSelect: (tableId: number) => void
 }
 
-// Type guard и нормализация
-const isValidStatus = (status: string): status is "available" | "dine-in" | "reserved" | "cleaning" => {
-  return ["available", "dine-in", "reserved", "cleaning"].includes(status)
+// Map backend status constants to frontend status
+const STATUS_MAP: Record<string, "available" | "dine-in" | "reserved" | "cleaning"> = {
+  Available: "available",
+  Reserved: "reserved",
+  DineIn: "dine-in",
+  CleaningIn: "cleaning",
+  // Also handle lowercase versions
+  available: "available",
+  reserved: "reserved",
+  "dine-in": "dine-in",
+  dinein: "dine-in",
+  cleaning: "cleaning",
+  cleaningin: "cleaning",
 }
 
 const normalizeStatus = (status: string): "available" | "dine-in" | "reserved" | "cleaning" => {
-  if (isValidStatus(status)) {
-    return status
-  }
-  return "available"
+  return STATUS_MAP[status] || STATUS_MAP[status.toLowerCase()] || "available"
 }
 
-// Цвета для каждой темы
+// Colors for each theme
 const statusConfig = {
   available: {
     light: {
@@ -43,7 +50,7 @@ const statusConfig = {
       textColor: "text-green-400",
     },
     icon: CheckCircle,
-    label: "Свободен",
+    label: "Available",
   },
   "dine-in": {
     light: {
@@ -55,7 +62,7 @@ const statusConfig = {
       textColor: "text-blue-400",
     },
     icon: Users,
-    label: "Занят",
+    label: "Occupied",
   },
   reserved: {
     light: {
@@ -67,7 +74,7 @@ const statusConfig = {
       textColor: "text-orange-400",
     },
     icon: Clock,
-    label: "Забронирован",
+    label: "Reserved",
   },
   cleaning: {
     light: {
@@ -79,7 +86,7 @@ const statusConfig = {
       textColor: "text-red-400",
     },
     icon: AlertCircle,
-    label: "Уборка",
+    label: "Cleaning",
   },
 }
 
@@ -87,7 +94,7 @@ export function TableGrid({ tables, selectedTable, onTableSelect }: TableGridPro
   const { theme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
-  // Ждём, пока тема загрузится, чтобы избежать рассинхрона
+  // Wait for theme to load to avoid desync
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -118,21 +125,20 @@ export function TableGrid({ tables, selectedTable, onTableSelect }: TableGridPro
               }}
               whileHover={isClickable ? { scale: 1.05 } : {}}
               whileTap={isClickable ? { scale: 0.95 } : {}}
-              className="animate-fade-in-up"
-              style={{ animationDelay: `${index * 50}ms` }}
             >
               <div
                 onClick={() => isClickable && onTableSelect(table.id)}
                 className={cn(
-                  "relative p-4 rounded-2xl border-2 transition-all duration-300 glass-effect",
+                  "relative p-4 rounded-2xl border-2 transition-all duration-300 backdrop-blur-sm",
                   themeColors.color,
                   isClickable && "cursor-pointer hover:shadow-lg",
                   !isClickable && "cursor-not-allowed opacity-75",
-                  isSelected && "ring-2 ring-orange-500 ring-offset-2 ring-offset-[#0F0F0F] gradient-orange",
-                  isClickable && "pulse-orange",
+                  isSelected && "ring-2 ring-orange-500 ring-offset-2",
+                  theme === "dark" && isSelected && "ring-offset-gray-900",
+                  theme === "light" && isSelected && "ring-offset-white",
                 )}
               >
-                {/* Статус индикатор */}
+                {/* Status indicator */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Icon className={cn("w-4 h-4", themeColors.textColor)} />
@@ -142,38 +148,44 @@ export function TableGrid({ tables, selectedTable, onTableSelect }: TableGridPro
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="w-2 h-2 bg-orange-500 rounded-full pulse-orange"
+                      className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"
                     />
                   )}
                 </div>
 
-                {/* Номер столика */}
+                {/* Table number */}
                 <div className="text-center mb-3">
                   <div
                     className={cn(
                       "text-2xl font-bold mb-1",
-                      isSelected ? "text-white text-shadow-glow" : "text-white"
+                      theme === "dark" ? "text-white" : "text-gray-900",
+                      isSelected && "text-orange-500",
                     )}
                   >
                     #{table.id}
                   </div>
-                  <div className={cn(theme === "dark" ? "text-gray-400" : "text-gray-600")}>Столик</div>
+                  <div className={cn(theme === "dark" ? "text-gray-400" : "text-gray-600")}>Table</div>
                 </div>
 
-                {/* Количество мест */}
-                <div className={cn("flex items-center justify-center gap-2", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
+                {/* Number of seats */}
+                <div
+                  className={cn(
+                    "flex items-center justify-center gap-2",
+                    theme === "dark" ? "text-gray-300" : "text-gray-700",
+                  )}
+                >
                   <Users className="w-4 h-4" />
                   <span className="text-sm font-medium">
-                    {table.seats} {table.seats === 1 ? "место" : table.seats < 5 ? "места" : "мест"}
+                    {table.seats} {table.seats === 1 ? "seat" : "seats"}
                   </span>
                 </div>
 
-                {/* Анимированный фон для выбранного столика */}
+                {/* Animated background for selected table */}
                 {isSelected && (
                   <motion.div
-                    className="absolute inset-0 gradient-orange rounded-2xl opacity-20"
+                    className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-orange-600/10 rounded-2xl"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.2 }}
+                    animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                   />
                 )}

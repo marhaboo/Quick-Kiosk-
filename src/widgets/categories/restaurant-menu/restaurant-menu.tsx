@@ -94,7 +94,7 @@ export function RestaurantMenu({ restaurantId }: { restaurantId: string }) {
   return (
     <div
       className={cn(
-        "p-6",
+        "p-6 ",
         theme === "dark"
           ? "bg-[url('/images/bg-of-site.png')]  bg-no-repeat bg-cover bg-center before:absolute before:inset-0 before:bg-black/50 before:z-0"
           : "bg-neutral-100 h-screen",

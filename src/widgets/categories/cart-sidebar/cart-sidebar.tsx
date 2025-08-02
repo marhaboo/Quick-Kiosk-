@@ -154,7 +154,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
       <h2 className={cn("text-lg my-6 font-semibold", theme === "dark" ? "text-white" : "text-gray-900")}>Корзина</h2>
       <div
         className={cn(
-          "rounded-3xl p-4 h-126",
+          "rounded-3xl p-4 ",
           theme === "dark" ? "border border-[#3D3A46] " : "border border-gray-200 bg-white shadow-sm",
         )}
       >
