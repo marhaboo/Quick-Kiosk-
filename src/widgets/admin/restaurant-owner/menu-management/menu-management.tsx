@@ -31,7 +31,7 @@ export default function MenuManagementUI() {
   const filteredMenu = currentRestaurant?.menu?.filter((item) => {
     const matchesCategory =
       selectedCategory === "Все" || item.categoryName === selectedCategory;
-    const matchesSearch =
+    const matchesSearch = 
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
