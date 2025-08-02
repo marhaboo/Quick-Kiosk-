@@ -24,7 +24,7 @@ export default function MenuManagementUI() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    dispatch(getRestaurantById("1"));
+    dispatch(getRestaurantById("4"));
   }, [dispatch]);
 
   // фильтрация меню
@@ -93,8 +93,10 @@ export default function MenuManagementUI() {
             >
               <div className="relative">
                 <Image
-                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&h=250"
+                  src=""
                   alt={item.name}
+                  width={200}
+                  height={200}
                   className="w-full h-48 object-cover"
                 />
               </div>
