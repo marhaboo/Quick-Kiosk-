@@ -13,6 +13,7 @@ import type { OrderItem, OrderItems } from "@/entities/cart-order/models/type"
 import { useTheme } from "next-themes"
 import { cn } from "@/shared/lib/utils"
 import type { CartItem } from "../restaurant-menu/restaurant-menu"
+import { SuccessOrder } from "@/features/categories/succes-page/succes-page"
 
 interface CartSidebarProps {
   items: CartItem[]
@@ -32,7 +33,6 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
   const [fullName, setFullName] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const deliveryFee = orderType === "Delivery" ? 10 : 0
@@ -128,7 +128,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
 
       console.log("Order submitted successfully:", result)
 
-      setIsSubmitted(true)
+
       setFullName("")
       setPhoneNumber("")
       setDeliveryAddress("")
@@ -138,22 +138,23 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
 
       // Show success message
       alert("Order submitted successfully!")
-    } catch (error: any) {
-      console.error("Order submission error:", error)
+    } catch (error: unknown) {
+  let errorMessage = "Failed to submit order. Please try again."
 
-      let errorMessage = "Failed to submit order. Please try again."
+  if (error instanceof Error) {
+    errorMessage = error.message
+  } else if (typeof error === "string") {
+    errorMessage = error
+  }
 
-      if (error?.message) {
-        errorMessage = error.message
-      } else if (typeof error === "string") {
-        errorMessage = error
-      }
+  setErrors({ submit: errorMessage })
+}
 
-      setErrors({ submit: errorMessage })
-    } finally {
+     finally {
       setIsSubmitting(false)
     }
   }
+
 
   // Get current date and time for min datetime-local value
   const now = new Date()
