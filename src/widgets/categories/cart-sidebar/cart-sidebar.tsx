@@ -150,12 +150,12 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
   }
 
   return (
-    <div className={cn("w-80 backdrop-blur-md", theme === "dark" ? "" : "bg-white/50")}>
+    <div className={cn("w-80 backdrop-blur-md rounded-lg px-5 pb-8  mt-5", theme === "dark" ? "" : "bg-white/50")}>
       <h2 className={cn("text-lg my-6 font-semibold", theme === "dark" ? "text-white" : "text-gray-900")}>Корзина</h2>
       <div
         className={cn(
-          "rounded-3xl p-4",
-          theme === "dark" ? "border border-[#3D3A46]" : "border border-gray-200 bg-white shadow-sm",
+          "rounded-3xl p-4 h-126",
+          theme === "dark" ? "border border-[#3D3A46] " : "border border-gray-200 bg-white shadow-sm",
         )}
       >
         <div className="mb-6 flex justify-end">

@@ -8,8 +8,8 @@ import { Card } from "@/shared/ui/card"
 import { useSelector } from "react-redux"
 import type { RootState } from "@/app/store/store"
 import type { ShortMenuItem } from "@/entities/home/models/types"
-import { useTheme } from "next-themes" // Import useTheme
-import { cn } from "@/shared/lib/utils" // Import cn
+import { useTheme } from "next-themes"
+import { cn } from "@/shared/lib/utils" 
 
 interface MenuGridProps {
   items: ShortMenuItem[]
@@ -74,10 +74,12 @@ function MenuItemSkeleton() {
 }
 
 export default function MenuGrid({ items, cartItems, onAddToCart, onRemoveFromCart }: MenuGridProps) {
+  console.log("MenuGrid items:", items);
+  
   const [visibleCount, setVisibleCount] = useState(8)
   const ITEMS_PER_PAGE = 8
   const { currentRestaurantLoading } = useSelector((state: RootState) => state.resById)
-  const { theme } = useTheme() // Get current theme
+  const { theme } = useTheme() 
 
   const isInCart = (itemId: number) => {
     return cartItems.some((cartItem) => cartItem.id === itemId)
@@ -127,19 +129,19 @@ export default function MenuGrid({ items, cartItems, onAddToCart, onRemoveFromCa
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6 pt-12">
         {visibleItems.map((item) => (
-          <div key={item.id} className="relative mb-10">
-            <div className="absolute -top-14 left-1/2 transform -translate-x-1/2 z-10">
+          <div key={item.id} className="relative mb-16">
+            <div className="absolute -top-18   left-1/2 transform -translate-x-1/2 z-10">
               <div
                 className={cn(
-                  "w-24 h-24 rounded-full overflow-hidden border-4 shadow-lg",
+                  "w-44 h-44 rounded-full overflow-hidden border-4 shadow-lg",
                   theme === "dark" ? "bg-white border-white" : "bg-gray-100 border-gray-100",
                 )}
               >
                 <Image
-                  src={item.image || "/placeholder.svg?height=96&width=96&query=food"}
+                 src={item.image ? `${item.image}` : "/placeholder.svg?height=200&width=300"}
                   alt={item.name}
-                  width={96}
-                  height={96}
+                  width={200}
+                  height={200}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -153,6 +155,16 @@ export default function MenuGrid({ items, cartItems, onAddToCart, onRemoveFromCa
               )}
             >
               <div className="text-center">
+                <div className="line-clamp-2">
+                  <h3
+                    className={cn(
+                      "font-bold text-base mb-2 text-center line-clamp-2",
+                      theme === "dark" ? "text-white" : "text-gray-900",
+                    )}
+                    style={{ minHeight: "3rem" }}
+                  >
+                  </h3>
+                </div>
                 <div className="line-clamp-2">
                   <h3
                     className={cn(

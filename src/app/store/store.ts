@@ -6,6 +6,7 @@ import resRequestReducer from "../../entities/res-request/reducers/res-slice";
 import  jobAppReducer  from "@/entities/job-application/reducers/job-application-slice";
 import  UserReducer  from "@/entities/user/reducers/user-slice";
 import   orderReducer  from "@/entities/cart-order/reducers/order-slice";
+import  profileReducer from "@/entities/profile/reducers/profile-slice";
 
 export function makeStore() {
   return configureStore({
@@ -16,7 +17,8 @@ export function makeStore() {
       resRequest: resRequestReducer,
       jobApplication: jobAppReducer,
       users: UserReducer,
-      orders: orderReducer
+      orders: orderReducer,
+      profile: profileReducer
     },
   });
 }

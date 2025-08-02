@@ -10,8 +10,8 @@ import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/app/store/store"
 import { API_BASE_URL } from "@/shared/utils/image-utils"
 import type { ShortMenuItem } from "@/entities/home/models/types"
-import { useTheme } from "next-themes" // Import useTheme
-import { cn } from "@/shared/lib/utils" // Import cn
+import { useTheme } from "next-themes" 
+import { cn } from "@/shared/lib/utils"
 
 export interface CartItem extends ShortMenuItem {
   quantity: number
@@ -23,7 +23,7 @@ export function RestaurantMenu({ restaurantId }: { restaurantId: string }) {
   const [searchQuery, setSearchQuery] = useState("")
   const { currentRestaurant } = useSelector((state: RootState) => state.resById)
   const dispatch: AppDispatch = useDispatch()
-  const { theme } = useTheme() // Get current theme
+  const { theme } = useTheme() 
 
   const categories = [
     {
@@ -85,7 +85,9 @@ export function RestaurantMenu({ restaurantId }: { restaurantId: string }) {
     const matchesCategory = selectedCategory === "all" || item.category === selectedCategory
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesCategory && matchesSearch
-  })
+  });
+  console.log("currentRestaurant:", currentRestaurant);
+  
 
   const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
@@ -94,8 +96,8 @@ export function RestaurantMenu({ restaurantId }: { restaurantId: string }) {
       className={cn(
         "p-6",
         theme === "dark"
-          ? "bg-[url('/images/bg-of-site.png')] bg-no-repeat bg-cover bg-center before:absolute before:inset-0 before:bg-black/50 before:z-0"
-          : "bg-neutral-100",
+          ? "bg-[url('/images/bg-of-site.png')]  bg-no-repeat bg-cover bg-center before:absolute before:inset-0 before:bg-black/50 before:z-0"
+          : "bg-neutral-100 h-screen",
       )}
     >
       {/* Верхняя панель */}
