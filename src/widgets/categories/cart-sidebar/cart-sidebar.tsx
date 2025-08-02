@@ -14,7 +14,6 @@ import { useTheme } from "next-themes"
 import { cn } from "@/shared/lib/utils"
 import type { CartItem } from "../restaurant-menu/restaurant-menu"
 
-
 interface CartSidebarProps {
   items: CartItem[]
   totalAmount: number
@@ -48,40 +47,39 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
     const newErrors: Record<string, string> = {}
 
     if (items.length === 0) {
-      newErrors.cart = "Cart is empty"
+      newErrors.cart = "Корзина пуста"
       setErrors(newErrors)
       return false
     }
 
-
     if (!fullName.trim()) {
-      newErrors.fullName = "Full name is required"
+      newErrors.fullName = "Полное имя обязательно"
     }
 
     if (!phoneNumber.trim()) {
-      newErrors.phoneNumber = "Phone number is required"
+      newErrors.phoneNumber = "Номер телефона обязателен"
     } else if (!/^\+?[\d\s-()]+$/.test(phoneNumber.trim())) {
-      newErrors.phoneNumber = "Please enter a valid phone number"
+      newErrors.phoneNumber = "Пожалуйста, введите корректный номер телефона"
     }
 
     // Validate order type specific fields
     if (orderType === "Delivery") {
       if (!deliveryAddress.trim()) {
-        newErrors.deliveryAddress = "Delivery address is required"
+        newErrors.deliveryAddress = "Адрес доставки обязателен"
       }
     }
 
     if (orderType === "AtTable") {
       if (!selectedTable) {
-        newErrors.selectedTable = "Please select a table"
+        newErrors.selectedTable = "Пожалуйста, выберите столик"
       }
       if (!bookingDateTime) {
-        newErrors.bookingDateTime = "Please select booking time"
+        newErrors.bookingDateTime = "Пожалуйста, выберите время бронирования"
       } else {
         const bookingDate = new Date(bookingDateTime)
         const now = new Date()
         if (bookingDate <= now) {
-          newErrors.bookingDateTime = "Booking time must be in the future"
+          newErrors.bookingDateTime = "Время бронирования должно быть в будущем"
         }
       }
     }
@@ -128,7 +126,6 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
 
       console.log("Order submitted successfully:", result)
 
-
       setFullName("")
       setPhoneNumber("")
       setDeliveryAddress("")
@@ -137,24 +134,21 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
       handleClearCart()
 
       // Show success message
-      alert("Order submitted successfully!")
+      alert("Заказ успешно оформлен!")
     } catch (error: unknown) {
-  let errorMessage = "Failed to submit order. Please try again."
+      let errorMessage = "Не удалось оформить заказ. Пожалуйста, попробуйте снова."
 
-  if (error instanceof Error) {
-    errorMessage = error.message
-  } else if (typeof error === "string") {
-    errorMessage = error
-  }
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === "string") {
+        errorMessage = error
+      }
 
-  setErrors({ submit: errorMessage })
-}
-
-     finally {
+      setErrors({ submit: errorMessage })
+    } finally {
       setIsSubmitting(false)
     }
   }
-
 
   // Get current date and time for min datetime-local value
   const now = new Date()
@@ -163,7 +157,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
 
   return (
     <div className={cn("w-80 backdrop-blur-md rounded-lg px-5 pb-8 mt-5", theme === "dark" ? "" : "bg-white/50")}>
-      <h2 className={cn("text-lg my-6 font-semibold", theme === "dark" ? "text-white" : "text-gray-900")}>Cart</h2>
+      <h2 className={cn("text-lg my-6 font-semibold", theme === "dark" ? "text-white" : "text-gray-900")}>Корзина</h2>
 
       <div
         className={cn(
@@ -185,7 +179,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                 : "text-orange-500 hover:text-orange-600 hover:bg-orange-100 border-orange-300",
             )}
           >
-            Clear Cart
+            Очистить корзину
           </Button>
         </div>
 
@@ -193,7 +187,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
         <div className="space-y-3 mb-6 overflow-y-auto max-h-96">
           {items.length === 0 ? (
             <p className={cn("text-center py-8", theme === "dark" ? "text-gray-400" : "text-gray-600")}>
-              Cart is empty
+              Корзина пуста
             </p>
           ) : (
             items.map((item) => (
@@ -236,7 +230,9 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                             theme === "dark" ? "bg-[#1A1A1A]" : "bg-gray-300",
                           )}
                         >
-                          <span className={cn("font-bold text-[12px]", theme === "dark" ? "text-white" : "text-gray-900")}>
+                          <span
+                            className={cn("font-bold text-[12px]", theme === "dark" ? "text-white" : "text-gray-900")}
+                          >
                             {item.quantity}
                           </span>
                         </div>
@@ -283,7 +279,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
             {/* Order Type Selection */}
             <div className="space-y-3">
               <h3 className={cn("font-semibold text-sm", theme === "dark" ? "text-white" : "text-gray-900")}>
-                Order Type:
+                Тип заказа:
               </h3>
               <div className="grid grid-cols-1 gap-2">
                 <button
@@ -300,10 +296,10 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                   <Store className="w-5 h-5 text-orange-400" />
                   <div className="text-left">
                     <p className={cn("font-medium text-sm", theme === "dark" ? "text-white" : "text-gray-900")}>
-                      Pickup
+                      Самовывоз
                     </p>
                     <p className={cn("text-xs", theme === "dark" ? "text-gray-400" : "text-gray-600")}>
-                      Ready in 15-20 min
+                      Готов через 15-20 мин
                     </p>
                   </div>
                 </button>
@@ -321,10 +317,10 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                   <Truck className="w-5 h-5 text-blue-400" />
                   <div className="text-left">
                     <p className={cn("font-medium text-sm", theme === "dark" ? "text-white" : "text-gray-900")}>
-                      Delivery
+                      Доставка
                     </p>
                     <p className={cn("text-xs", theme === "dark" ? "text-gray-400" : "text-gray-600")}>
-                      30-45 min • +$10
+                      30-45 мин • +$10
                     </p>
                   </div>
                 </button>
@@ -342,10 +338,10 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                   <CalendarCheck className="w-5 h-5 text-green-400" />
                   <div className="text-left">
                     <p className={cn("font-medium text-sm", theme === "dark" ? "text-white" : "text-gray-900")}>
-                      At Table
+                      За столиком
                     </p>
                     <p className={cn("text-xs", theme === "dark" ? "text-gray-400" : "text-gray-600")}>
-                      Table reservation
+                      Бронирование столика
                     </p>
                   </div>
                 </button>
@@ -358,7 +354,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                 <label
                   className={cn("block text-sm font-medium mb-2", theme === "dark" ? "text-white" : "text-gray-900")}
                 >
-                  Full Name: *
+                  Полное имя: *
                 </label>
                 <div className="relative">
                   <User
@@ -370,7 +366,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                   <Input
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Enter your full name"
+                    placeholder="Введите ваше полное имя"
                     className={cn(
                       "rounded-xl pl-10 h-12",
                       theme === "dark"
@@ -386,7 +382,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                 <label
                   className={cn("block text-sm font-medium mb-2", theme === "dark" ? "text-white" : "text-gray-900")}
                 >
-                  Phone Number: *
+                  Номер телефона: *
                 </label>
                 <div className="relative">
                   <Phone
@@ -420,7 +416,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                   <label
                     className={cn("block text-sm font-medium mb-2", theme === "dark" ? "text-white" : "text-gray-900")}
                   >
-                    Delivery Address: *
+                    Адрес доставки: *
                   </label>
                   <div className="relative">
                     <MapPin
@@ -432,7 +428,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                     <Input
                       value={deliveryAddress}
                       onChange={(e) => setDeliveryAddress(e.target.value)}
-                      placeholder="Enter delivery address"
+                      placeholder="Введите адрес доставки"
                       className={cn(
                         "rounded-xl pl-10 h-12",
                         theme === "dark"
@@ -454,7 +450,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                   <label
                     className={cn("block text-sm font-medium mb-2", theme === "dark" ? "text-white" : "text-gray-900")}
                   >
-                    Table Number: *
+                    Номер столика: *
                   </label>
                   <div className="relative">
                     <select
@@ -469,11 +465,11 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                       )}
                       required
                     >
-                      <option value="">Select a table</option>
-                      <option value="1">Table #1 (2 seats)</option>
-                      <option value="2">Table #2 (4 seats)</option>
-                      <option value="3">Table #3 (6 seats)</option>
-                      <option value="4">Table #4 (8 seats)</option>
+                      <option value="">Выберите столик</option>
+                      <option value="1">Столик #1 (2 места)</option>
+                      <option value="2">Столик #2 (4 места)</option>
+                      <option value="3">Столик #3 (6 мест)</option>
+                      <option value="4">Столик #4 (8 мест)</option>
                     </select>
                     <ChevronDown
                       className={cn(
@@ -487,7 +483,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                   <label
                     className={cn("block text-sm font-medium mb-2", theme === "dark" ? "text-white" : "text-gray-900")}
                   >
-                    Booking Time: *
+                    Время бронирования: *
                   </label>
                   <div className="relative">
                     <Clock
@@ -523,14 +519,14 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
               )}
             >
               <div className="flex justify-between text-sm">
-                <span className={cn("", theme === "dark" ? "text-gray-400" : "text-gray-600")}>Subtotal:</span>
+                <span className={cn("", theme === "dark" ? "text-gray-400" : "text-gray-600")}>Подытог:</span>
                 <span className={cn("", theme === "dark" ? "text-white" : "text-gray-900")}>
                   ${totalAmount.toFixed(2)}
                 </span>
               </div>
               {orderType === "Delivery" && (
                 <div className="flex justify-between text-sm">
-                  <span className={cn("", theme === "dark" ? "text-gray-400" : "text-gray-600")}>Delivery:</span>
+                  <span className={cn("", theme === "dark" ? "text-gray-400" : "text-gray-600")}>Доставка:</span>
                   <span className={cn("", theme === "dark" ? "text-white" : "text-gray-900")}>
                     ${deliveryFee.toFixed(2)}
                   </span>
@@ -542,7 +538,7 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
                   theme === "dark" ? "border-[#3D3A46]" : "border-gray-300",
                 )}
               >
-                <span className={cn("", theme === "dark" ? "text-white" : "text-gray-900")}>Total:</span>
+                <span className={cn("", theme === "dark" ? "text-white" : "text-gray-900")}>Итого:</span>
                 <span className="text-green-400 text-lg">${finalAmount.toFixed(2)}</span>
               </div>
             </div>
@@ -554,12 +550,12 @@ export function CartSidebar({ items, totalAmount, onUpdateQuantity, onRemoveItem
               className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
-                "Submitting..."
+                "Оформление..."
               ) : (
                 <>
-                  {orderType === "Pickup" && "Place Pickup Order"}
-                  {orderType === "Delivery" && "Place Delivery Order"}
-                  {orderType === "AtTable" && "Reserve Table & Order"}
+                  {orderType === "Pickup" && "Оформить заказ на самовывоз"}
+                  {orderType === "Delivery" && "Оформить заказ с доставкой"}
+                  {orderType === "AtTable" && "Забронировать столик и заказать"}
                 </>
               )}
             </Button>
