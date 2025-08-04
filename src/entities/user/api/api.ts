@@ -8,7 +8,7 @@ export const getUsers = createAsyncThunk(
   async () => {
     const token = localStorage.getItem("token");
     const { data } = await axiosRequest.get(`/User`, {
-      headers: {
+      headers: { 
         Authorization: `Bearer ${token}`,
       },
     });
@@ -36,7 +36,7 @@ export const updateUserRole = createAsyncThunk(
     const token = localStorage.getItem("token");
     await axiosRequest.put(
       `/User/${id}/role`,
-      { role }, // вместо JSON.stringify(role)
+      JSON.stringify(role), 
       {
         headers: {
           "Content-Type": "application/json",

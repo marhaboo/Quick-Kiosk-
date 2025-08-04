@@ -3,11 +3,12 @@
 import { useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { Button } from "@/shared/ui/button"
-import { User, Phone, Mail, Calendar, MapPin, CheckCircle, XCircle, AlertCircle, Briefcase } from "lucide-react"
+import { User, Phone, Mail, Calendar, MapPin, CheckCircle, XCircle, AlertCircle, Briefcase, Trash2 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/app/store/store"
-import { getResRequest } from "@/entities/res-request/api/api"
-import { JobAppGet } from "@/entities/job-application/models/type"
+import { getJobApplication } from "@/entities/job-application/api/job-application-api"
+import { delJobApplication, updateJobApplicationStatus } from "@/entities/job-application/api/job-application-api"
+import type { JobAppGet } from "@/entities/job-application/models/type"
 
 interface JobTableProps {
   isLoading: boolean
@@ -18,7 +19,7 @@ export default function VakanciTable({ isLoading }: JobTableProps) {
   const { jobs } = useSelector((state: RootState) => state.jobApplication)
 
   useEffect(() => {
-    dispatch(getResRequest())
+    dispatch(getJobApplication())
   }, [dispatch])
 
   if (isLoading) {
@@ -81,13 +82,15 @@ export default function VakanciTable({ isLoading }: JobTableProps) {
   }
 
   const handleApprove = (id: number) => {
-    console.log(`Принятие заявки ${id}`)
-    // dispatch(updateJobStatus({id, status: "Accepted"}))
+    dispatch(updateJobApplicationStatus({ id, status: "Accepted" }))
   }
 
   const handleReject = (id: number) => {
-    console.log(`Отклонение заявки ${id}`)
-    // dispatch(updateJobStatus({id, status: "Rejected"}))
+    dispatch(updateJobApplicationStatus({ id, status: "Rejected" }))
+  }
+
+  const handleDelete = (id: number) => {
+    dispatch(delJobApplication(id))
   }
 
   const statusCounts = {
@@ -147,11 +150,21 @@ export default function VakanciTable({ isLoading }: JobTableProps) {
                     <p className="text-sm text-gray-400">{job.desiredPosition}</p>
                   </div>
                 </div>
-                <div
-                  className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center space-x-1 ${getStatusColor(job.status)}`}
-                >
-                  {getStatusIcon(job.status)}
-                  <span>{getStatusText(job.status)}</span>
+                <div className="flex items-center space-x-2">
+                  <div
+                    className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center space-x-1 ${getStatusColor(job.status)}`}
+                  >
+                    {getStatusIcon(job.status)}
+                    <span>{getStatusText(job.status)}</span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleDelete(job.id)}
+                    className="text-gray-400 hover:text-red-400 hover:bg-red-900/20"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </CardHeader>

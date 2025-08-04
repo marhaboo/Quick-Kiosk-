@@ -3,11 +3,11 @@
 import { useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { Button } from "@/shared/ui/button"
-import { User, Phone, Mail, Calendar, MapPin, CheckCircle, XCircle, AlertCircle } from "lucide-react"
+import { User, Phone, Mail, Calendar, MapPin, CheckCircle, XCircle, AlertCircle, Trash2 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/app/store/store"
 import { getResRequest } from "@/entities/res-request/api/api"
-
+import { delJobApplication, updateJobApplicationStatus } from "@/entities/job-application/api/job-application-api"
 
 interface JobTableProps {
   isLoading: boolean
@@ -81,11 +81,15 @@ export default function JobTable({ isLoading }: JobTableProps) {
   }
 
   const handleApprove = (id: string) => {
-    console.log(`Принятие заявки ${id}`)
+    dispatch(updateJobApplicationStatus({ id: Number(id), status: "Accepted" }))
   }
 
   const handleReject = (id: string) => {
-    console.log(`Отклонение заявки ${id}`)
+    dispatch(updateJobApplicationStatus({ id: Number(id), status: "Rejected" }))
+  }
+
+  const handleDelete = (id: string) => {
+    dispatch(delJobApplication(Number(id)))
   }
 
   const statusCounts = {
@@ -145,11 +149,21 @@ export default function JobTable({ isLoading }: JobTableProps) {
                     <p className="text-sm text-gray-400">{request.name || "Неизвестный ресторан"}</p>
                   </div>
                 </div>
-                <div
-                  className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center space-x-1 ${getStatusColor(request.status || "Pending")}`}
-                >
-                  {getStatusIcon(request.status || "Pending")}
-                  <span>{getStatusText(request.status || "Pending")}</span>
+                <div className="flex items-center space-x-2">
+                  <div
+                    className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center space-x-1 ${getStatusColor(request.status || "Pending")}`}
+                  >
+                    {getStatusIcon(request.status || "Pending")}
+                    <span>{getStatusText(request.status || "Pending")}</span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleDelete(request.id)}
+                    className="text-gray-400 hover:text-red-400 hover:bg-red-900/20"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </CardHeader>
