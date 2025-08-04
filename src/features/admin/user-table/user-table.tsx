@@ -12,7 +12,6 @@
   import { Users, Shield, Store, CreditCard, Mail, Calendar, Edit, Trash2, UserPlus } from "lucide-react"
   import type { RootState, AppDispatch } from "@/app/store/store"
   import { deleteUser, getUsers, postUser, updateUserRole } from "@/entities/user/api/api"
-import { SuccessPage } from "@/features/add-restaurant/success-page/success-page"
 
   interface User {
     username: string
